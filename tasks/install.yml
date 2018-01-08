@@ -29,4 +29,9 @@
     option: reposdir
     value: /etc/yum.repos.disabled
 
+- name: Install | Remove cloud-init
+  yum:
+    name: cloud-init
+    state: absent
+
 ...

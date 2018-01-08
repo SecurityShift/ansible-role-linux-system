@@ -1,0 +1,11 @@
+---
+
+- name: Audit | Apply audit rules
+  copy:
+    src: audit.rules
+    dest: /etc/audit/audit.rules
+  tags:
+    - audit
+    - security
+
+...

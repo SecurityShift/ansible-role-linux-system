@@ -1,6 +1,6 @@
 ---
 
-- name: Installed
+- name: SSH | Installed
   yum:
     name: '{{ item }}'
     state: installed
@@ -8,7 +8,7 @@
   tags:
     - sshd
 
-- name: Configuration
+- name: SSH | Configuration
   template:
     src: sshd_config.j2
     dest: "{{ sshd_config_file }}"
@@ -20,7 +20,7 @@
   tags:
     - sshd
 
-- name: Service enabled and running
+- name: SSH | Service enabled and running
   service:
     name: "{{ sshd_service }}"
     enabled: true
@@ -29,8 +29,3 @@
   tags:
     - sshd
 
-- name: Register that this role has run
-  set_fact: sshd_has_run=true
-  when: sshd_has_run is not defined
-  tags:
-    - sshd

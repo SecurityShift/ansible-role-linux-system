@@ -56,4 +56,10 @@
     - security
     - ssh
 
+- name: Setup mount points
+  import_tasks: mount.yml
+
+- name: Setup audit
+  import_tasks: audit.yml
+
 ...

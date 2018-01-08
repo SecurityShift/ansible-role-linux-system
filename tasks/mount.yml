@@ -1,0 +1,48 @@
+---
+
+- name: Install | Set mount point options
+  mount:
+    path: '{{ item.path }}'
+    src: '{{ item.src }}'
+    opts: '{{ item.opts }}'
+    fstype: '{{ item.fstype }}'
+    state: present
+  with_items:
+    - path: /
+      src: /dev/mapper/vg.01-rootvol
+      fstype: xfs
+      opts: defaults
+    - path: /home
+      src: /dev/mapper/vg.01-homevol
+      fstype: xfs
+      opts: nodev
+    - path: /var
+      fstype: xfs
+      src: /dev/mapper/vg.01-varvol
+      opts: nodev
+    - path: /var/log
+      fstype: xfs
+      src: /dev/mapper/vg.01-logvol
+      opts: nodev
+    - path: /var/log/audit
+      fstype: xfs
+      src: /dev/mapper/vg.01-auditvol
+      opts: nodev
+    - path: /tmp
+      src: /dev/mapper/vg.01-tmpvol
+      fstype: xfs
+      opts: nodev,noexec,nosuid
+  tags:
+    - hardening
+    - security
+    - mount
+
+- name: Install | Backlist various modules
+  copy:
+    src: blacklist.conf
+    dest: /etc/modprobe.d/blacklist.conf
+  tags:
+    - hardening
+    - security
+
+...
