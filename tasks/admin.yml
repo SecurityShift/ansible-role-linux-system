@@ -61,7 +61,9 @@
   authorized_key:
     user: admin
     state: present
-    comment: admin@securityshift.com
-    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXK7f1IdH3dyhoxpf8CEY+B4VsWS9nGbKITba6RLw9z8dl4R7owcZJi3xyzQsbUWx9YJzmcFJEVvJxBpHAunVGky9rbwEnjjxloB6J+gwnOVMn9QsJqEwwE3BSwrbc8tKu3cT16WNZ9jVZkDOGPXJTG/lQrJbjs/vyEkzM8TR5v8wP7UTO29GOtwoeZOYRpuHQpNVf28vSuZHHKgDcZ40uRwM5sf1Xe5ho4SA+62v3BDo/83McqSjERroZ4mYUNTXcJXasJ/3CnCbDH2W/r4iUD3BlaYkFGuVIeEZji5DxK4FTn940CpveyJGUOGaMqH7/DYtxD+gywDAyUHL+UBJr"
+    comment: '{{ item.comment }}'
+    key: '{{ item.key }}'
+  with_items:
+    - '{{ admin_ssh_keys }}'
   tags:
     - accounts
