@@ -49,7 +49,7 @@
     conn_name: admin
     vlanid: '{{ admin_interfaces.vlanid }}'
     vlandev: '{{ admin_interfaces.vlandev }}'
-    ip4: '{{ admin_ip }}/{{ admin_prefix }}'
+    ip4: '{{ ansible_host }}/{{ admin_prefix }}'
     gw4: '{{ admin_gw }}'
     dns4: '{{ dns_resolvers }}'
     #dns4_search: '{{ item.dns4_search | default(None) }}'
