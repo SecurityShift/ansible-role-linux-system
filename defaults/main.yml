@@ -78,7 +78,7 @@ sshd_defaults:
   X11Forwarding: yes
   Banner: /etc/issue.net
   PermitRootLogin: no
-  ListenAddress: '{{ admin_ip }}'
+  ListenAddress: '{{ ansible_host }}'
   UsePrivilegeSeparation: sandbox
   AcceptEnv:
     - LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
