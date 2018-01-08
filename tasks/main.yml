@@ -44,8 +44,11 @@
 
 - name: Config | Add issue for before login
   copy:
-    content: '{{ issue_content }}'
-    dest: /etc/issue
+    content: "{{ issue_content }}"
+    dest: '/etc/{{ item }}'
+  with_items:
+    - issue
+    - issue.net
   tags:
     - config
     - security
@@ -61,5 +64,12 @@
 
 - name: Setup audit
   import_tasks: audit.yml
+
+- name: Setup aide
+  import_role:
+    name: aide
+  tags:
+    - aide
+
 
 ...
