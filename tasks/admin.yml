@@ -1,0 +1,65 @@
+---
+
+- name: Admin | Create root group
+  group:
+    name: root
+    system: true
+    gid: 0
+  tags:
+    - accounts
+
+- name: Admin | Create root user
+  user:
+    name: root
+    system: true
+    comment: "Root User"
+    uid: 0
+    group: root
+  tags:
+    - accounts
+
+- name: Admin | set roots mail alias
+  lineinfile:
+    dest: /etc/aliases
+    line: "{{ item.name }}: {{ item.alias }}"
+    regexp: "^{{ item.name }}:.*"
+  with_items:
+    - '{{ mailaliases }}'
+  notify: update aliases database
+
+- name: Admin | Create sshusers group
+  group:
+    name: sshusers
+    system: true
+    gid: 500
+  tags:
+    - accounts
+
+- name: Admin | Create admin group
+  group:
+    name: admin
+    system: true
+    gid: 1000
+    state: present
+  tags:
+    - accounts
+
+- name: Admin | Create admin user
+  user:
+    name: admin
+    system: true
+    comment: "Admin User"
+    uid: 1000
+    group: admin
+    groups: [ wheel, sshusers ]
+  tags:
+    - accounts
+
+- name: Admin | Set admin users authorized key
+  authorized_key:
+    user: admin
+    state: present
+    comment: admin@securityshift.com
+    key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDXK7f1IdH3dyhoxpf8CEY+B4VsWS9nGbKITba6RLw9z8dl4R7owcZJi3xyzQsbUWx9YJzmcFJEVvJxBpHAunVGky9rbwEnjjxloB6J+gwnOVMn9QsJqEwwE3BSwrbc8tKu3cT16WNZ9jVZkDOGPXJTG/lQrJbjs/vyEkzM8TR5v8wP7UTO29GOtwoeZOYRpuHQpNVf28vSuZHHKgDcZ40uRwM5sf1Xe5ho4SA+62v3BDo/83McqSjERroZ4mYUNTXcJXasJ/3CnCbDH2W/r4iUD3BlaYkFGuVIeEZji5DxK4FTn940CpveyJGUOGaMqH7/DYtxD+gywDAyUHL+UBJr"
+  tags:
+    - accounts

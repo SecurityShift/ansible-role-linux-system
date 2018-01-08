@@ -1,0 +1,124 @@
+---
+
+- name: Firewall | Make sure the firewall is running
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Add interfaces to firewall zone
+  firewalld:
+    zone: '{{ item.zone }}'
+    interface: '{{ item.ifname | default(item.conn_name) }}'
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items:
+    - '{{ nmcli_ethernet }}'
+    - '{{ nmcli_bond }}'
+    - '{{ nmcli_bond_slave }}'
+    - '{{ nmcli_vlan }}'
+  when:
+    - item.zone is defined
+    - item.ifname is defined
+    - item.conn_name is defined
+  loop_control:
+    label:
+      - iface: '{{ item.ifname | default(conn_name) }}'
+      - zone: '{{ item.zone }}'
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Make sure basic services can pass through firewall
+  firewalld:
+    service: "{{ item.service }}"
+    permanent: true
+    immediate: true
+    zone: "{{ item.zone | default('public') }}"
+    state: enabled
+  with_items:
+    - '{{ firewall_default_services }}'
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Make sure user specified services can pass through firewall
+  firewalld:
+    service: "{{ item.service }}"
+    zone: "{{ item.zone | default('public') }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items: "{{ firewall_allow_services }}"
+  when:
+    - firewall_allow_services is defined
+    - item.service is defined
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Make sure user specified ports can pass through firewall
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  with_items: "{{ firewall_allow_ports }}"
+  when: firewall_allow_ports is defined
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Check default policy
+  command: firewall-cmd --get-default-zone
+  register: current_firewall_default_zone
+  changed_when: False
+  check_mode: True
+  tags:
+    - security
+    - firewall
+
+- name: Set drop as default policy
+  command: "firewall-cmd --set-default-zone={{ firewall_default_zone }}"
+  when:
+    - current_firewall_default_zone.stdout is defined
+    - current_firewall_default_zone.stdout != firewall_default_zone
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+- name: Firewall | Check logging of dropped packets
+  command: firewall-cmd --get-log-denied
+  register: current_firewall_log_denied
+  changed_when: False
+  check_mode: True
+  tags:
+    - security
+    - firewall
+
+- name: Enable logging of dropped packets
+  command: "firewall-cmd --set-log-denied={{ firewall_log_denied }}"
+  when:
+    - current_firewall_log_denied.stdout is defined
+    - current_firewall_log_denied.stdout != firewall_log_denied
+  notify:
+    - restart firewalld
+  tags:
+    - security
+    - firewall
+
+...

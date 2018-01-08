@@ -1,0 +1,62 @@
+---
+
+- name: Network | Install required packages
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - NetworkManager-glib
+    - nm-connection-editor.x86_64
+    - libsemanage-python
+    - policycoreutils-python
+  tags:
+    - configuration
+    - network
+
+- name: Network | Add main trunk bond interface
+  nmcli:
+    type: bond
+    conn_name: '{{ admin_interface.name }}'
+    mode: 802.3ad
+    state: present
+  when:
+    - admin_interface.name is defined
+    - admin_interface.slaves is defined
+  tags:
+    - configuration
+    - network
+    - bonding
+
+- name: Network | Add bond slave interfaces
+  nmcli:
+    type: bond-slave
+    conn_name: '{{ admin_interface.name }}-{{ loop.index }}'
+    ifname: '{{ item }}'
+    master: '{{ admin_interace.name }}'
+    state: present
+  with_items:
+    - '{{ admin_interface.slaves }}'
+  when:
+    - admin_interface.slaves is defined
+  tags:
+    - configuration
+    - network
+    - bonding
+
+- name: Network | Add admin vlan interface
+  nmcli:
+    type: vlan
+    conn_name: admin
+    vlanid: 20
+    vlandev: services
+    ip4: '{{ admin_ip }}/{{ admin_prefix }}'
+    gw4: '{{ admin_gw }}'
+    dns4: '{{ dns_resolvers }}'
+    #dns4_search: '{{ item.dns4_search | default(None) }}'
+    state: present
+  tags:
+    - configuration
+    - network
+    - admin
+
+...

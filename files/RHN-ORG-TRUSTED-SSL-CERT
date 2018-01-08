@@ -1,0 +1,95 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            e3:44:18:86:78:c0:31:9d
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=AU, ST=Victoria, L=Melbourne, O=SecurityShift, OU=spacewalk.as7551.net, CN=spacewalk01.mel.as7551.net
+        Validity
+            Not Before: Jan  5 12:50:33 2018 GMT
+            Not After : Dec 31 12:50:33 2036 GMT
+        Subject: C=AU, ST=Victoria, L=Melbourne, O=SecurityShift, OU=spacewalk.as7551.net, CN=spacewalk01.mel.as7551.net
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:bf:04:88:5d:5b:28:4f:f1:d6:52:2d:fe:f4:d4:
+                    06:5d:86:91:b6:fd:dd:e3:18:5c:18:b6:78:2f:9f:
+                    e7:e0:5c:37:8f:aa:fd:e2:68:66:1b:a8:8f:03:91:
+                    b7:8d:75:8d:6b:27:71:95:a6:7e:a1:43:eb:44:9a:
+                    f0:f3:50:3f:3f:22:c9:34:42:ca:85:1a:e4:3d:a6:
+                    15:73:b5:8d:45:8b:99:b0:67:5a:97:1e:77:20:54:
+                    61:ec:92:f6:e9:8b:44:c2:7e:13:2f:8c:13:09:2f:
+                    56:44:13:35:53:71:55:14:47:ba:46:ae:9b:bc:ec:
+                    95:24:dc:73:05:c5:1f:8a:75:57:89:27:5c:3f:d5:
+                    2d:2a:86:c9:e2:9a:e8:c3:e5:86:77:04:ce:b8:da:
+                    a4:65:bc:66:5c:7c:5a:08:f2:02:be:27:41:2f:e5:
+                    e7:06:49:10:0c:ce:8e:67:ed:9a:f9:65:88:6b:63:
+                    e3:5f:e3:01:5a:bc:35:ff:88:07:07:34:1c:34:9e:
+                    31:6d:72:b9:30:6a:ef:da:d6:f7:b6:7d:c4:ff:cb:
+                    79:64:12:fe:70:4c:1d:a9:aa:68:20:8a:4a:ac:7b:
+                    13:d9:72:d9:fa:6d:08:91:5a:bc:04:84:d2:a1:6e:
+                    d4:7f:07:2b:ad:c8:89:4b:e5:b1:1d:70:5f:8e:32:
+                    37:a1
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:TRUE
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment, Certificate Sign
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication, TLS Web Client Authentication
+            Netscape Comment: 
+                RHN SSL Tool Generated Certificate
+            X509v3 Subject Key Identifier: 
+                24:D8:9E:AC:04:B2:A5:2C:41:7E:61:A2:14:27:29:1D:56:85:99:E0
+            X509v3 Authority Key Identifier: 
+                keyid:24:D8:9E:AC:04:B2:A5:2C:41:7E:61:A2:14:27:29:1D:56:85:99:E0
+                DirName:/C=AU/ST=Victoria/L=Melbourne/O=SecurityShift/OU=spacewalk.as7551.net/CN=spacewalk01.mel.as7551.net
+                serial:E3:44:18:86:78:C0:31:9D
+
+    Signature Algorithm: sha256WithRSAEncryption
+         46:1d:12:e6:d9:d0:c3:0c:2e:c3:ed:c4:e6:f1:60:37:f4:a9:
+         ef:71:c5:de:29:1f:18:b4:8f:5f:fa:d0:d5:1e:4b:e7:66:cd:
+         72:fe:9d:07:ba:ec:b9:c7:85:61:f3:62:59:c6:74:fd:b8:6b:
+         33:f3:e4:15:52:b5:8b:ee:cc:91:0d:7e:99:85:62:17:89:3f:
+         80:51:85:3e:61:7e:3c:44:27:33:ed:1b:16:35:95:84:6f:d9:
+         10:cd:1e:ed:08:4c:75:1e:d9:7f:8b:4d:29:36:ad:61:37:d1:
+         06:00:e8:0b:b8:0f:c7:c3:96:2b:ca:4b:62:64:09:d7:5f:7d:
+         23:9a:85:ec:14:72:41:0f:87:c1:b6:1f:b3:50:f9:d3:7b:66:
+         46:95:34:37:52:d0:33:41:c8:c8:09:a0:b0:06:06:ca:ec:65:
+         4a:18:e3:49:2f:ce:be:66:69:5f:02:d3:3e:ae:34:7e:21:97:
+         0b:d4:2b:95:30:ed:e8:37:fe:ae:6c:6c:a1:29:b8:f3:dd:28:
+         7a:5d:6c:00:ed:65:82:e6:e4:c6:5f:42:77:76:d2:28:aa:c4:
+         1b:6a:5e:2a:0b:79:28:e4:17:46:e4:72:2d:39:13:f7:03:5f:
+         66:20:77:f3:8d:f0:26:c5:d4:5a:46:09:a1:56:26:57:55:ec:
+         44:c7:71:a7
+-----BEGIN CERTIFICATE-----
+MIIE/zCCA+egAwIBAgIJAONEGIZ4wDGdMA0GCSqGSIb3DQEBCwUAMIGQMQswCQYD
+VQQGEwJBVTERMA8GA1UECAwIVmljdG9yaWExEjAQBgNVBAcMCU1lbGJvdXJuZTEW
+MBQGA1UECgwNU2VjdXJpdHlTaGlmdDEdMBsGA1UECwwUc3BhY2V3YWxrLmFzNzU1
+MS5uZXQxIzAhBgNVBAMMGnNwYWNld2FsazAxLm1lbC5hczc1NTEubmV0MB4XDTE4
+MDEwNTEyNTAzM1oXDTM2MTIzMTEyNTAzM1owgZAxCzAJBgNVBAYTAkFVMREwDwYD
+VQQIDAhWaWN0b3JpYTESMBAGA1UEBwwJTWVsYm91cm5lMRYwFAYDVQQKDA1TZWN1
+cml0eVNoaWZ0MR0wGwYDVQQLDBRzcGFjZXdhbGsuYXM3NTUxLm5ldDEjMCEGA1UE
+Awwac3BhY2V3YWxrMDEubWVsLmFzNzU1MS5uZXQwggEiMA0GCSqGSIb3DQEBAQUA
+A4IBDwAwggEKAoIBAQC/BIhdWyhP8dZSLf701AZdhpG2/d3jGFwYtngvn+fgXDeP
+qv3iaGYbqI8DkbeNdY1rJ3GVpn6hQ+tEmvDzUD8/Isk0QsqFGuQ9phVztY1Fi5mw
+Z1qXHncgVGHskvbpi0TCfhMvjBMJL1ZEEzVTcVUUR7pGrpu87JUk3HMFxR+KdVeJ
+J1w/1S0qhsnimujD5YZ3BM642qRlvGZcfFoI8gK+J0Ev5ecGSRAMzo5n7Zr5ZYhr
+Y+Nf4wFavDX/iAcHNBw0njFtcrkwau/a1ve2fcT/y3lkEv5wTB2pqmggikqsexPZ
+ctn6bQiRWrwEhNKhbtR/ByutyIlL5bEdcF+OMjehAgMBAAGjggFYMIIBVDAMBgNV
+HRMEBTADAQH/MAsGA1UdDwQEAwICpDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYB
+BQUHAwIwMQYJYIZIAYb4QgENBCQWIlJITiBTU0wgVG9vbCBHZW5lcmF0ZWQgQ2Vy
+dGlmaWNhdGUwHQYDVR0OBBYEFCTYnqwEsqUsQX5hohQnKR1WhZngMIHFBgNVHSME
+gb0wgbqAFCTYnqwEsqUsQX5hohQnKR1WhZngoYGWpIGTMIGQMQswCQYDVQQGEwJB
+VTERMA8GA1UECAwIVmljdG9yaWExEjAQBgNVBAcMCU1lbGJvdXJuZTEWMBQGA1UE
+CgwNU2VjdXJpdHlTaGlmdDEdMBsGA1UECwwUc3BhY2V3YWxrLmFzNzU1MS5uZXQx
+IzAhBgNVBAMMGnNwYWNld2FsazAxLm1lbC5hczc1NTEubmV0ggkA40QYhnjAMZ0w
+DQYJKoZIhvcNAQELBQADggEBAEYdEubZ0MMMLsPtxObxYDf0qe9xxd4pHxi0j1/6
+0NUeS+dmzXL+nQe67LnHhWHzYlnGdP24azPz5BVStYvuzJENfpmFYheJP4BRhT5h
+fjxEJzPtGxY1lYRv2RDNHu0ITHUe2X+LTSk2rWE30QYA6Au4D8fDlivKS2JkCddf
+fSOahewUckEPh8G2H7NQ+dN7ZkaVNDdS0DNByMgJoLAGBsrsZUoY40kvzr5maV8C
+0z6uNH4hlwvUK5Uw7eg3/q5sbKEpuPPdKHpdbADtZYLm5MZfQnd20iiqxBtqXioL
+eSjkF0bkci05E/cDX2Ygd/ON8CbF1FpGCaFWJldV7ETHcac=
+-----END CERTIFICATE-----

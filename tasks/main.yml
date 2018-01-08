@@ -1,0 +1,59 @@
+---
+# tasks file for common
+
+- name: Check required variables
+  fail: msg="Variable "{{ item }}" is not defined"
+  when: item not in vars
+  with_items: "{{required_vars}}"
+  changed_when: False
+
+- name: Setup install sources
+  import_tasks: install.yml
+  tags:
+    - install
+
+- name: Setup base service configuration
+  import_tasks: config.yml
+  tags:
+    - configuration
+
+- name: Setup admin users and groups
+  import_tasks: admin.yml
+  tags:
+    - admin
+    - accounts
+
+- name: Setup network
+  import_tasks: network.yml
+  tags:
+    - network
+
+- name: Setup SELinux
+  import_tasks: selinux.yml
+  tags:
+    - security
+    - firewall
+    - selinux
+
+- name: Setup Firewall
+  import_tasks: firewall.yml
+  tags:
+    - security
+    - firewall
+    - selinux
+
+- name: Config | Add issue for before login
+  copy:
+    content: '{{ issue_content }}'
+    dest: /etc/issue
+  tags:
+    - config
+    - security
+
+- name: Setup SSH
+  import_tasks: ssh.yml
+  tags:
+    - security
+    - ssh
+
+...
