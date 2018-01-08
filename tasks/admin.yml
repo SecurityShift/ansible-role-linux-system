@@ -15,6 +15,7 @@
     comment: "Root User"
     uid: 0
     group: root
+    password: '{{ root_password_hash }}'
   tags:
     - accounts
 
@@ -52,6 +53,7 @@
     uid: 1000
     group: admin
     groups: [ wheel, sshusers ]
+    password: '{{ admin_password_hash }}'
   tags:
     - accounts
 
