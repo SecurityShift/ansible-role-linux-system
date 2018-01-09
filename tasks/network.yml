@@ -47,12 +47,11 @@
   nmcli:
     type: vlan
     conn_name: admin
-    vlanid: '{{ admin_interfaces.vlanid }}'
-    vlandev: '{{ admin_interfaces.vlandev }}'
-    ip4: '{{ ansible_host }}/{{ admin_prefix }}'
+    vlanid: '{{ admin_interface.vlanid }}'
+    vlandev: '{{ admin_interface.vlandev }}'
+    ip4: '{{ admin_ip }}/{{ admin_prefix }}'
     gw4: '{{ admin_gw }}'
     dns4: '{{ dns_resolvers }}'
-    #dns4_search: '{{ item.dns4_search | default(None) }}'
     state: present
   when:
     - admin_interface.vlanid is defined
@@ -65,7 +64,7 @@
   nmcli:
     type: ethernet
     conn_name: '{{ admin_interface }}'
-    ip4: '{{ ansible_host }}/{{ admin_prefix }}'
+    ip4: '{{ admin_ip }}/{{ admin_prefix }}'
     gw4: '{{ admin_gw }}'
     dns4: '{{ dns_resolvers }}'
     #dns4_search: '{{ item.dns4_search | default(None) }}'
