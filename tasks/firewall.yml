@@ -90,7 +90,7 @@
     - security
     - firewall
 
-- name: Set drop as default policy
+- name: Firewall | Set drop as default policy
   command: "firewall-cmd --set-default-zone={{ firewall_default_zone }}"
   when:
     - current_firewall_default_zone.stdout is defined

@@ -1,0 +1,9 @@
+---
+
+- import_role:
+    name: ossec-agent
+  when: "'ossec' not in group_names"
+  tags:
+    - ossec
+
+...

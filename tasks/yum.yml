@@ -1,0 +1,75 @@
+---
+
+- name: Yum | Add spacewalk to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^{{ spacewalk_ip | replace(".", "\.") }}.*$'
+    line: '{{ spacewalk_ip }} {{ spacewalk_server }} {{ spacewalk_server.split(".")[0] }}'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Yum | Add spacewalk CA certificate to yum
+  copy:
+    src: RHN-ORG-TRUSTED-SSL-CERT
+    dest: /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
+
+- name: Yum | Add spacewalk CA certificate to trusted anchors
+  copy:
+    src: RHN-ORG-TRUSTED-SSL-CERT
+    dest: /etc/pki/ca-trust/source/anchors/RHN-ORG-TRUSTED-SSL-CERT
+  register: spacewalk_ssl_ca
+
+- name: Yum | Update CA anchors
+  command: update-ca-trust
+  when: spacewalk_ssl_ca.changed
+
+
+- name: Yum | Register with spacewalk
+  rhn_register:
+    state: present
+    server_url: "https://{{ spacewalk_server}}/XMLRPC"
+    activationkey: "{{ spacewalk_key }}"
+  tags:
+    - configuration
+
+- name: Yum | Add channel gpg keys
+  copy:
+    src: "RPM-GPG-KEY-{{ item }}"
+    dest: '/etc/pki/rpm-gpg/RPM-GPG-KEY-{{ item }}'
+  with_items:
+    - '{{ default_rhn_gpg_keys }}'
+    - '{{ rhn_gpg_keys }}'
+
+- name: Yum | Import channel gpg keys
+  rpm_key:
+    state: present
+    key: '/etc/pki/rpm-gpg/RPM-GPG-KEY-{{ item }}'
+  with_items:
+    - '{{ default_rhn_gpg_keys }}'
+    - '{{ rhn_gpg_keys }}'
+
+- name: Yum | Subscribe to required channels
+  rhn_channel:
+    name: '{{ item }}'
+    sysname: '{{ inventory_hostname }}'
+    url: 'https://{{ spacewalk_server }}/rpc/api'
+    user: '{{ spacewalk_admin_user }}'
+    password: '{{ spacewalk_admin_password }}'
+  with_items:
+    - '{{ default_rhn_channels }}'
+    - '{{ rhn_channels }}'
+
+- name: Yum | Disable external yum repos
+  ini_file:
+    dest: /etc/yum.conf
+    section: main
+    option: reposdir
+    value: /etc/yum.repos.disabled
+
+- name: Install | Remove cloud-init
+  yum:
+    name: cloud-init
+    state: absent
+
+...

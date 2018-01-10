@@ -6,7 +6,6 @@
     name: firewalld
     state: restarted
 
-
 - name: update aliases database
   command: newaliases
 

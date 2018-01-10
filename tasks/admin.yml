@@ -67,3 +67,28 @@
     - '{{ admin_ssh_keys }}'
   tags:
     - accounts
+
+    #- name: Admin | Create required users
+    #user:
+    #name: '{{ item.name }}'
+    #system: true
+    #comment: '{{ item.comment }}'
+    #uid: '{{ item.uid }}'
+    #group: '{{ item.name }}'
+    #groups: '{{ item.groups }}'
+    #password: '{{ item.password }}'
+    #with_items:
+    #- '{{ admin_users }}'
+    #tags:
+    #- accounts
+
+    #- name: Admin | Add required users ssh keys
+    #  authorized_key:
+    #user: '{{ item.name }}'
+    #state: present
+    #comment: '{{ item.ssh_key_comment }}'
+    #key: '{{ item.ssh_key }}'
+    # with_items:
+    #- '{{ admin_users }}'
+    #tags:
+    #- accounts

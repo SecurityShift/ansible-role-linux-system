@@ -7,40 +7,19 @@
   with_items: "{{required_vars}}"
   changed_when: False
 
-- name: Setup install sources
-  import_tasks: install.yml
-  tags:
-    - install
-
-- name: Setup base service configuration
-  import_tasks: config.yml
-  tags:
-    - configuration
-
-- name: Setup admin users and groups
-  import_tasks: admin.yml
-  tags:
-    - admin
-    - accounts
-
-- name: Setup network
-  import_tasks: network.yml
-  tags:
-    - network
-
-- name: Setup SELinux
-  import_tasks: selinux.yml
-  tags:
-    - security
-    - firewall
-    - selinux
-
-- name: Setup Firewall
-  import_tasks: firewall.yml
-  tags:
-    - security
-    - firewall
-    - selinux
+- import_tasks: yum.yml
+- import_tasks: config.yml
+- import_tasks: admin.yml
+- import_tasks: ssh.yml
+- import_tasks: lvm.yml
+- import_tasks: mount.yml
+- import_tasks: audit.yml
+- import_tasks: network.yml
+- import_tasks: selinux.yml
+- import_tasks: firewall.yml
+- import_tasks: ipa.yml
+- import_tasks: mail.yml
+- import_tasks: ossec.yml
 
 - name: Config | Add issue for before login
   copy:
@@ -53,23 +32,16 @@
     - config
     - security
 
-- name: Setup SSH
-  import_tasks: ssh.yml
+- name: Config | Add motd for after login
+  copy:
+    content: "{{ motd_content }}"
+    dest: /etc/motd
   tags:
+    - config
     - security
-    - ssh
 
-- name: Setup mount points
-  import_tasks: mount.yml
-
-- name: Setup audit
-  import_tasks: audit.yml
-
-- name: Setup aide
-  import_role:
+- import_role:
     name: aide
-  tags:
-    - aide
 
 
 ...

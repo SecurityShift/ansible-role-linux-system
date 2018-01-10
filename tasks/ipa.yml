@@ -1,0 +1,25 @@
+---
+
+- name: IPA | Install IPA Client
+  yum:
+    name: ipa-client
+    state: present
+  tags:
+    - ipa
+
+- name: IPA | Register host with IPA server
+  ipa_host:
+    name: '{{ inventory_hostname }}'
+    description: '{{ host_description }}'
+    ip_address: '{{ admin_ip }}'
+    ns_host_location: Melbourne
+    ns_os_version: CentOS 7
+    #ns_hardware_platform: Lenovo T61
+    state: present
+    ipa_host: '{{ ipa_host }}'
+    ipa_user: admin
+    ipa_pass: '{{ ipaserver_admin_password }}'
+    validate_certs: False
+  tags:
+    - ipa
+

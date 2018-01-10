@@ -1,0 +1,15 @@
+---
+
+- name: LVM | Create volume group
+  lvg:
+    vg: '{{ volume_group }}'
+    pvs: '{{ physical_volumes }}'
+
+- name: LVM | Create logical volumes
+  lvol:
+    lv: '{{ item.lv }}'
+    vg: '{{ volume_group }}'
+    size: '{{ item.size }}'
+  with_items:
+    - '{{ logical_volumes }}'
+    - '{{ custom_logical_volumes }}'

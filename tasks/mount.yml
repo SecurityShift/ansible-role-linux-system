@@ -37,7 +37,7 @@
     - security
     - mount
 
-- name: Install | Backlist various modules
+- name: Install | Blacklist various modules
   copy:
     src: blacklist.conf
     dest: /etc/modprobe.d/blacklist.conf

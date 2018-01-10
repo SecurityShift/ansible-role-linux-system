@@ -1,0 +1,6 @@
+---
+
+- import_role:
+    name: postfix
+  tags:
+    - postfix

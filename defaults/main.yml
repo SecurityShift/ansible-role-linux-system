@@ -37,17 +37,17 @@ mailaliases:
 
 issue_content: |
 
-  ********************************************************************
-  *                                                                  *
-  * This system is for the use of authorized users only.  Usage of   *
-  * this system may be monitored and recorded by system personnel.   *
-  *                                                                  *
-  * Anyone using this system expressly consents to such monitoring   *
-  * and is advised that if such monitoring reveals possible          *
-  * evidence of criminal activity, system personnel may provide the  *
-  * evidence from such monitoring to law enforcement officials.      *
-  *                                                                  *
-  ********************************************************************
+  UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED
+  You must have explicit, authorized permission to access or configure
+  this device. Unauthorized attempts and actions to access or use this
+  system may result in civil and/or criminal penalties. All activities
+  performed on this device are logged and monitored.
+
+motd_content: |
+
+  Welcome to {{ inventory_hostname }}
+
+  This host is managed by ansible, NO manual changes!
 
 sshd: {}
 sshd_packages:
@@ -87,5 +87,46 @@ sshd_defaults:
     - LC_IDENTIFICATION LC_ALL LANGUAGE
     - XMODIFIERS
   Subsystem: "sftp {{ sshd_sftp_server }}"
+
+physical_volumes: /dev/sda3
+volume_group: vg.01
+rootvol_size: 8g
+homevol_size: 8g
+tmpvol_size: 1g
+varvol_size: 4g
+logvol_size: 2g
+auditvol_size: 2g
+logical_volumes:
+  - lv: rootvol
+    size: '{{ rootvol_size }}'
+  - lv: homevol
+    size: '{{ homevol_size }}'
+  - lv: tmpvol
+    size: '{{ tmpvol_size }}'
+  - lv: varvol
+    size: '{{ varvol_size }}'
+  - lv: logvol
+    size: '{{ logvol_size }}'
+  - lv: auditvol
+    size: '{{ auditvol_size }}'
+custom_logical_volumes: []
+
+default_rhn_channels:
+  - centos-el7-base-x86_64
+  - centos-el7-updates-x86_64
+  - ossec-el7-x86_64
+  - epel-el7-x86_64
+  - securityshift-el7-x86_64
+  - spacewalk-client-el7-x86_64
+rhn_channels: []
+default_rhn_gpg_keys:
+  - CentOS-7
+  - atomicorp
+  - EPEL-7
+  - SecurityShift
+  - spacewalk
+  - spacewalk-java
+rhn_gpg_keys:
+  - ghettoforge
 
 ...
