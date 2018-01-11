@@ -21,7 +21,6 @@ firewall_default_services:
 
     aliases: []
 
-admin_prefix: 24
 
 admin_interface:
   - name: services

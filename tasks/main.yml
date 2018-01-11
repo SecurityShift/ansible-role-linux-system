@@ -18,6 +18,8 @@
 - import_tasks: selinux.yml
 - import_tasks: firewall.yml
 - import_tasks: ipa.yml
+  tags:
+    - ipa
 - import_tasks: mail.yml
 - import_tasks: ossec.yml
 

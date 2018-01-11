@@ -1,9 +1,34 @@
 ---
 
+- name: IPA | Add ipa to /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: '^10\.210\/20\/222.*$'
+    line: '10.210.20.222 {{ ipa_host }}'
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - ipa
+
 - name: IPA | Install IPA Client
   yum:
     name: ipa-client
     state: present
+  tags:
+    - ipa
+
+- name: IPA | Add ipa CA certificate to trusted anchors
+  copy:
+    src: ipa.as7551.net.pem
+    dest: /etc/pki/ca-trust/extracted/pem/ipa.as7551.net.pem
+  register: ipa_ssl_ca
+  tags:
+    - ipa
+
+- name: IPA | Update CA anchors
+  command: update-ca-trust
+  when: ipa_ssl_ca.changed
   tags:
     - ipa
 
