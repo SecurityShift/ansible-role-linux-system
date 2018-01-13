@@ -21,9 +21,11 @@ firewall_default_services:
 
     aliases: []
 
+default_mounts: []
+custom_mounts: []
 
 admin_interface:
-  - name: services
+  - name: admin
     vlanid: 20
     vlandev: services
     slaves:
@@ -110,22 +112,9 @@ logical_volumes:
     size: '{{ auditvol_size }}'
 custom_logical_volumes: []
 
-default_rhn_channels:
-  - centos-el7-base-x86_64
-  - centos-el7-updates-x86_64
-  - ossec-el7-x86_64
-  - epel-el7-x86_64
-  - securityshift-el7-x86_64
-  - spacewalk-client-el7-x86_64
+default_rhn_channels: []
 rhn_channels: []
-default_rhn_gpg_keys:
-  - CentOS-7
-  - atomicorp
-  - EPEL-7
-  - SecurityShift
-  - spacewalk
-  - spacewalk-java
-rhn_gpg_keys:
-  - ghettoforge
+default_rhn_gpg_keys: []
+rhn_gpg_keys: []
 
 ...

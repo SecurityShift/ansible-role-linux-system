@@ -4,7 +4,6 @@
   lvg:
     vg: '{{ volume_group }}'
     pvs: '{{ physical_volumes }}'
-
 - name: LVM | Create logical volumes
   lvol:
     lv: '{{ item.lv }}'

@@ -1,50 +1,55 @@
 ---
 
-- name: IPA | Add ipa to /etc/hosts
-  lineinfile:
-    path: /etc/hosts
-    regexp: '^10\.210\/20\/222.*$'
-    line: '10.210.20.222 {{ ipa_host }}'
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - ipa
+#- name: IPA | Add ipa to /etc/hosts
+#  lineinfile:
+#    path: /etc/hosts
+#    regexp: '^10\.210\/20\/222.*$'
+#    line: '10.210.20.222 {{ ipa_host }}'
+#    owner: root
+#    group: root
+#    mode: 0644
+#  tags:
+#    - ipa
 
-- name: IPA | Install IPA Client
-  yum:
-    name: ipa-client
-    state: present
-  tags:
-    - ipa
+#- name: IPA | Install IPA Client
+#  yum:
+#    name: ipa-client
+#    state: present
+#  tags:
+#    - ipa
 
-- name: IPA | Add ipa CA certificate to trusted anchors
-  copy:
-    src: ipa.as7551.net.pem
-    dest: /etc/pki/ca-trust/extracted/pem/ipa.as7551.net.pem
-  register: ipa_ssl_ca
-  tags:
-    - ipa
+    #- name: IPA | Add ipa CA certificate to trusted anchors
+    #  copy:
+    #src: ipa.as7551.net.pem
+    #dest: /etc/pki/ca-trust/extracted/pem/ipa.as7551.net.pem
+    #register: ipa_ssl_ca
+    #tags:
+    #- ipa
 
-- name: IPA | Update CA anchors
-  command: update-ca-trust
-  when: ipa_ssl_ca.changed
-  tags:
-    - ipa
+    #- name: IPA | Update CA anchors
+    #command: update-ca-trust
+    #when: ipa_ssl_ca.changed
+    #tags:
+    #- ipa
 
 - name: IPA | Register host with IPA server
   ipa_host:
     name: '{{ inventory_hostname }}'
-    description: '{{ host_description }}'
+    description: '{{ host_description | default("") }}'
     ip_address: '{{ admin_ip }}'
     ns_host_location: Melbourne
     ns_os_version: CentOS 7
-    #ns_hardware_platform: Lenovo T61
+    ns_hardware_platform: Lenovo T61
     state: present
     ipa_host: '{{ ipa_host }}'
     ipa_user: admin
     ipa_pass: '{{ ipaserver_admin_password }}'
-    validate_certs: False
+  ignore_errors: true
   tags:
     - ipa
 
+- name: IPA | Setup IPA client
+  import_role:
+    role: ipaclient
+  tags:
+    - ipaclient

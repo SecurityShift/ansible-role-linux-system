@@ -1,8 +1,15 @@
 ---
 
+- name: Check if ossec-server is available
+  command: 'ping -n 1 {{ ossec_server_name }}'
+  ignore_errors: true
+  register: ossec_server_ping
+
 - import_role:
     name: ossec-agent
-  when: "'ossec' not in group_names"
+  when:
+    - "'ossec' not in group_names"
+    - ossec_server_ping.rc == 0
   tags:
     - ossec
 

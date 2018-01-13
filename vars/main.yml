@@ -1,2 +1,6 @@
 ---
 # vars file for SecurityShift.common
+
+dev: /dev/sda
+part: 3
+max_gap_kb: 1024

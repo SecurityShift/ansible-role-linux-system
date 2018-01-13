@@ -8,20 +8,45 @@
   changed_when: False
 
 - import_tasks: yum.yml
-- import_tasks: config.yml
-- import_tasks: admin.yml
-- import_tasks: ssh.yml
-- import_tasks: lvm.yml
-- import_tasks: mount.yml
-- import_tasks: audit.yml
-- import_tasks: network.yml
-- import_tasks: selinux.yml
-- import_tasks: firewall.yml
-- import_tasks: ipa.yml
   tags:
-    - ipa
+    - yum
+- import_tasks: config.yml
+  tags:
+    - config
+- import_tasks: admin.yml
+  tags:
+    - admin
+- import_tasks: ssh.yml
+  tags:
+    - ssg
+- import_tasks: lvm.yml
+  tags:
+    - lvm
+- import_tasks: fs.yml
+  tags:
+    - fs
+- import_tasks: mount.yml
+  tags:
+    - mount
+- import_tasks: audit.yml
+  tags:
+    - audit
+#- import_tasks: network.yml
+- import_tasks: selinux.yml
+  tags:
+    - selinux
+- import_tasks: firewall.yml
+  tags:
+    - firewall
+    #- import_tasks: ipa.yml
+    #tags:
+    #- ipa
 - import_tasks: mail.yml
+  tags:
+    - mail
 - import_tasks: ossec.yml
+  tags:
+    - ossec
 
 - name: Config | Add issue for before login
   copy:
@@ -38,6 +63,7 @@
   copy:
     content: "{{ motd_content }}"
     dest: /etc/motd
+  notify: reload sshd
   tags:
     - config
     - security
