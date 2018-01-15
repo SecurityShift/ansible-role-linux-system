@@ -31,25 +31,17 @@
     #when: ipa_ssl_ca.changed
     #tags:
     #- ipa
-
-- name: IPA | Register host with IPA server
-  ipa_host:
-    name: '{{ inventory_hostname }}'
-    description: '{{ host_description | default("") }}'
-    ip_address: '{{ admin_ip }}'
-    ns_host_location: Melbourne
-    ns_os_version: CentOS 7
-    ns_hardware_platform: Lenovo T61
-    state: present
-    ipa_host: '{{ ipa_host }}'
-    ipa_user: admin
-    ipa_pass: '{{ ipaserver_admin_password }}'
+- name: Check that ipa server is available
+  uri:
+    url: 'https://{{ ipa_host }}'
+    validate_certs: False
   ignore_errors: true
-  tags:
-    - ipa
+  run_once: true
+  register: ipa_status
 
 - name: IPA | Setup IPA client
   import_role:
     role: ipaclient
+  when: ipa_status.status == 200
   tags:
     - ipaclient

@@ -31,16 +31,16 @@
 - import_tasks: audit.yml
   tags:
     - audit
-#- import_tasks: network.yml
+- import_tasks: network.yml
 - import_tasks: selinux.yml
   tags:
     - selinux
 - import_tasks: firewall.yml
   tags:
     - firewall
-    #- import_tasks: ipa.yml
-    #tags:
-    #- ipa
+- import_tasks: ipa.yml
+  tags:
+    - ipa
 - import_tasks: mail.yml
   tags:
     - mail

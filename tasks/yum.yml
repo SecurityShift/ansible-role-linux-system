@@ -32,6 +32,7 @@
   uri:
     url: 'https://{{ spacewalk_server }}'
   ignore_errors: true
+  run_once: true
   register: spacewalk_status
 
 - name: Yum | Register with spacewalk
