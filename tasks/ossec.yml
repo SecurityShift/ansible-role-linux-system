@@ -1,7 +1,7 @@
 ---
 
 - name: Check if ossec-server is available
-  command: 'ping -n 1 {{ ossec_server_name }}'
+  command: 'ping -c 1 {{ ossec_server_name }}'
   ignore_errors: true
   register: ossec_server_ping
 
