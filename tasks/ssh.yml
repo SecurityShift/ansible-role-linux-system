@@ -1,31 +1,8 @@
 ---
 
-- name: SSH | Installed
-  yum:
-    name: '{{ item }}'
-    state: installed
-  with_items: "{{ sshd_packages }}"
-  tags:
-    - sshd
-
-- name: SSH | Configuration
-  template:
-    src: sshd_config.j2
-    dest: "{{ sshd_config_file }}"
-    owner: "{{ sshd_config_owner }}"
-    group: "{{ sshd_config_group }}"
-    mode: "{{ sshd_config_mode }}"
-    validate: "{{ sshd_binary }} -t -f %s"
-  notify: reload sshd
-  tags:
-    - sshd
-
-- name: SSH | Service enabled and running
-  service:
-    name: "{{ sshd_service }}"
-    enabled: true
-    state: started
-  when: sshd_manage_service and ansible_virtualization_type != 'docker'
+- name: Configure SSH
+  import_role:
+    name: sshd
   tags:
     - sshd
 

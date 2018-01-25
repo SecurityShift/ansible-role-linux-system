@@ -18,6 +18,7 @@
     type: bond
     conn_name: '{{ admin_interface.name }}'
     mode: 802.3ad
+    mtu: 9000
     state: present
   when:
     - admin_interface.name is defined
@@ -30,9 +31,9 @@
 - name: Network | Add bond slave interfaces
   nmcli:
     type: bond-slave
-    conn_name: '{{ admin_interface.name }}-{{ loop.index }}'
+    conn_name: '{{ item }}'
     ifname: '{{ item }}'
-    master: '{{ admin_interace.name }}'
+    master: '{{ admin_interface.name }}'
     state: present
   with_items:
     - '{{ admin_interface.slaves }}'
@@ -46,9 +47,9 @@
 - name: Network | Add admin vlan interface
   nmcli:
     type: vlan
-    conn_name: admin
+    conn_name: '{{ admin_interface.name }}.{{ admin_interface.vlanid }}'
     vlanid: '{{ admin_interface.vlanid }}'
-    vlandev: '{{ admin_interface.vlandev }}'
+    vlandev: '{{ admin_interface.name }}'
     ip4: '{{ admin_ip }}/{{ admin_prefix }}'
     gw4: '{{ admin_gw }}'
     dns4: '{{ dns_resolvers }}'
@@ -60,22 +61,20 @@
     - network
     - admin
 
+
 - name: Network | Add admin interface
   nmcli:
     type: ethernet
-    conn_name: '{{ admin_interface }}'
+    conn_name: '{{ admin_interface.name }}'
     ip4: '{{ admin_ip }}/{{ admin_prefix }}'
     gw4: '{{ admin_gw }}'
     dns4: '{{ dns_resolvers }}'
     #dns4_search: '{{ item.dns4_search | default(None) }}'
     state: present
   when:
-    - admin_interface is defined
-    - admin_interface.vlanid is not defined
+    - admin_interface is defined and admin_interface.vlanid is not defined
   tags:
     - configuration
     - network
     - admin
 
-
-...

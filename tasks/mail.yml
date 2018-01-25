@@ -1,6 +1,25 @@
 ---
 
-- import_role:
+#- name: Install pyOpenSSL
+#  pip:
+#    name: pyOpenSSL
+#    state: present
+#  tags:
+#    - postfix
+#    - ssl
+#
+#- name: Generate a Self Signed OpenSSL certificate
+#  openssl_certificate:
+#    path: /etc/ssl/certs/ssl-cert-snakeoil.pem
+#    privatekey_path: /etc/ssl/private/ssl-cert-snakeoil.key
+#    csr_path: /etc/ssl/csr/ssl-cert-snakeoil.csr
+#    provider: selfsigned
+#  tags:
+#    - postfix
+#    - ssl
+
+- name: Configure postfix mail relaying
+  import_role:
     name: postfix
   tags:
     - postfix

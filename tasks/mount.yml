@@ -15,12 +15,12 @@
     - security
     - mount
 
-- name: Install | Blacklist various modules
-  copy:
-    src: blacklist.conf
-    dest: /etc/modprobe.d/blacklist.conf
-  tags:
-    - hardening
-    - security
+    #- name: Install | Blacklist various modules
+    # copy:
+    #src: blacklist.conf
+    #dest: /etc/modprobe.d/blacklist.conf
+    #tags:
+    #- hardening
+    #- security
 
 ...

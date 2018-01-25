@@ -53,7 +53,7 @@
 - name: Firewall | Make sure user specified services can pass through firewall
   firewalld:
     service: "{{ item.service }}"
-    zone: "{{ item.zone | default('public') }}"
+    zone: "{{ item.zone | default(omit) }}"
     permanent: true
     immediate: true
     state: enabled
@@ -69,12 +69,15 @@
 
 - name: Firewall | Make sure user specified ports can pass through firewall
   firewalld:
-    port: "{{ item }}"
+    port: "{{ item.port }}"
+    zone: "{{ item.zone | default(omit) }}"
     permanent: true
     immediate: true
     state: enabled
   with_items: "{{ firewall_allow_ports }}"
-  when: firewall_allow_ports is defined
+  when:
+    - firewall_allow_ports is defined
+    - item.port is defined
   notify:
     - restart firewalld
   tags:

@@ -18,7 +18,7 @@
     - admin
 - import_tasks: ssh.yml
   tags:
-    - ssg
+    - ssh
 - import_tasks: lvm.yml
   tags:
     - lvm
@@ -28,10 +28,12 @@
 - import_tasks: mount.yml
   tags:
     - mount
-- import_tasks: audit.yml
-  tags:
-    - audit
-- import_tasks: network.yml
+    #- import_tasks: audit.yml
+    # tags:
+    # - audit
+    #- import_tasks: network.yml
+    #tags:
+    #- network
 - import_tasks: selinux.yml
   tags:
     - selinux
@@ -48,28 +50,28 @@
   tags:
     - ossec
 
-- name: Config | Add issue for before login
-  copy:
-    content: "{{ issue_content }}"
-    dest: '/etc/{{ item }}'
-  with_items:
-    - issue
-    - issue.net
-  tags:
-    - config
-    - security
+    #- name: Config | Add issue for before login
+    #copy:
+    #content: "{{ issue_content }}"
+    #dest: '/etc/{{ item }}'
+    #with_items:
+    #- issue
+    #- issue.net
+    #tags:
+    #- config
+    #- security
 
-- name: Config | Add motd for after login
-  copy:
-    content: "{{ motd_content }}"
-    dest: /etc/motd
-  notify: reload sshd
-  tags:
-    - config
-    - security
+    #- name: Config | Add motd for after login
+    # copy:
+    #content: "{{ motd_content }}"
+    #dest: /etc/motd
+    #notify: reload sshd
+    #tags:
+    #- config
+    #- security
 
-- import_role:
-    name: aide
+    #- import_role:
+    #name: aide
 
 
 ...
