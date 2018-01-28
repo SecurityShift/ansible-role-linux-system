@@ -1,6 +1,6 @@
 ---
 
-- name: SELinux | Make sure SELinux is Enforcing
+- name: Make sure SELinux is Enforcing
   selinux:
     policy: targeted
     state: "{{ selinux_state }}"

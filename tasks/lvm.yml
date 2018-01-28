@@ -1,10 +1,11 @@
 ---
 
-- name: LVM | Create volume group
+- name: Create volume group
   lvg:
     vg: '{{ volume_group }}'
     pvs: '{{ physical_volumes }}'
-- name: LVM | Create logical volumes
+
+- name: Create logical volumes
   lvol:
     lv: '{{ item.lv }}'
     vg: '{{ volume_group }}'

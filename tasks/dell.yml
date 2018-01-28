@@ -1,11 +1,11 @@
 ---
 
-- name: Dell Updates | Copy Dell repo GPG key
+- name: Copy Dell repo GPG key
   copy:
     src: "{{ role_path }}/files/RPM-GPG-KEY-dell"
     dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-dell
 
-- name: Dell Updates | Import dell GPG key
+- name: Import dell GPG key
   rpm_key:
     state: present
     key: /etc/pki/rpm-gpg/RPM-GPG-KEY-dell

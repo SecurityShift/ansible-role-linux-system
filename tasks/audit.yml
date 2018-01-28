@@ -1,6 +1,6 @@
 ---
 
-- name: Audit | Apply audit rules
+- name: Apply audit rules
   copy:
     src: audit.rules
     dest: /etc/audit/audit.rules

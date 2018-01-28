@@ -7,71 +7,74 @@
   with_items: "{{required_vars}}"
   changed_when: False
 
-- import_tasks: yum.yml
+- name: Setup hostname
+  import_tasks: hostname.yml
+  tags:
+    - hostname
+
+- name: Setup spacewalk agent
+  import_tasks: yum.yml
   tags:
     - yum
-- import_tasks: config.yml
-  tags:
-    - config
-- import_tasks: admin.yml
+
+- name: Setup root and admin users
+  import_tasks: admin.yml
   tags:
     - admin
-- import_tasks: ssh.yml
+
+- name: Setup ssh server
+  import_tasks: ssh.yml
   tags:
     - ssh
-- import_tasks: lvm.yml
+
+- name: Setup Logical Volume Manager
+  import_tasks: lvm.yml
   tags:
     - lvm
-- import_tasks: fs.yml
+
+- name: Setup Filesystems
+  import_tasks: fs.yml
   tags:
     - fs
-- import_tasks: mount.yml
+
+- name: Configure filesystem mounts
+  import_tasks: mount.yml
   tags:
     - mount
-    #- import_tasks: audit.yml
-    # tags:
-    # - audit
-    #- import_tasks: network.yml
+
+    #- name: Setup network interfaces
+    #import_tasks: network.yml
     #tags:
     #- network
-- import_tasks: selinux.yml
+
+- name: Setup SELinux
+  import_tasks: selinux.yml
   tags:
     - selinux
-- import_tasks: firewall.yml
+
+- name: Sertup firewalld
+  import_tasks: firewall.yml
   tags:
     - firewall
-- import_tasks: ipa.yml
+
+- name: Setup IPA Client
+  import_tasks: ipa.yml
   tags:
     - ipa
-- import_tasks: mail.yml
+
+- name: Setup postfix mail relaying
+  import_tasks: mail.yml
   tags:
     - mail
-- import_tasks: ossec.yml
+
+- name: Setup ossec-hids-agent
+  import_tasks: ossec.yml
+  when: "'ossec' not in group_names"
   tags:
     - ossec
 
-    #- name: Config | Add issue for before login
-    #copy:
-    #content: "{{ issue_content }}"
-    #dest: '/etc/{{ item }}'
-    #with_items:
-    #- issue
-    #- issue.net
-    #tags:
-    #- config
-    #- security
+- name: Setup shell environment
+  import_tasks: environment.yml
+  tags:
+    - environment
 
-    #- name: Config | Add motd for after login
-    # copy:
-    #content: "{{ motd_content }}"
-    #dest: /etc/motd
-    #notify: reload sshd
-    #tags:
-    #- config
-    #- security
-
-    #- import_role:
-    #name: aide
-
-
-...

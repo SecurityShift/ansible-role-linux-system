@@ -17,10 +17,8 @@ firewall_default_zone: drop
 firewall_log_denied: all
 firewall_default_services:
   - service: ssh
-    zone: internal
 
-    aliases: []
-
+aliases: []
 default_mounts: []
 custom_mounts: []
 
@@ -35,20 +33,6 @@ admin_interface:
 mailaliases:
   - name: root
     alias: '{{ admin_email }}'
-
-issue_content: |
-
-  UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED
-  You must have explicit, authorized permission to access or configure
-  this device. Unauthorized attempts and actions to access or use this
-  system may result in civil and/or criminal penalties. All activities
-  performed on this device are logged and monitored.
-
-motd_content: |
-
-  Welcome to {{ inventory_hostname }}
-
-  This host is managed by ansible, NO manual changes!
 
 physical_volumes: /dev/sda3
 volume_group: vg.01

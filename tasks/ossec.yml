@@ -4,11 +4,12 @@
   command: 'ping -c 1 {{ ossec_server_name }}'
   ignore_errors: true
   register: ossec_server_ping
+  run_once: true
+  #sucess_when: ossec_server_ping.rc == 0
 
 - import_role:
     name: ossec-agent
   when:
-    - "'ossec' not in group_names"
     - ossec_server_ping.rc == 0
   tags:
     - ossec

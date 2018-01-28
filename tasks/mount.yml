@@ -1,6 +1,6 @@
 ---
 
-- name: Install | Set mount point options
+- name: Set mount point options
   mount:
     path: '{{ item.path }}'
     src: '{{ item.src }}'

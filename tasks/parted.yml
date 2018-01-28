@@ -1,11 +1,11 @@
 ---
 
-- name: Parted | Install packages
+- name: Install packages
   yum:
     name: parted
     state: present
 
-- name: Parted | Get info
+- name: Get info
   parted:
     device: "{{dev}}"
     number: "{{part}}"

@@ -1,6 +1,6 @@
 ---
 
-- name: Admin | Create root group
+- name: Create root group
   group:
     name: root
     system: true
@@ -8,7 +8,7 @@
   tags:
     - accounts
 
-- name: Admin | Create root user
+- name: Create root user
   user:
     name: root
     system: true
@@ -19,7 +19,7 @@
   tags:
     - accounts
 
-- name: Admin | set roots mail alias
+- name: set roots mail alias
   lineinfile:
     dest: /etc/aliases
     line: "{{ item.name }}: {{ item.alias }}"
@@ -28,7 +28,7 @@
     - '{{ mailaliases }}'
   notify: update aliases database
 
-- name: Admin | Create sshusers group
+- name: Create sshusers group
   group:
     name: sshusers
     system: true
@@ -36,7 +36,7 @@
   tags:
     - accounts
 
-- name: Admin | Create admin group
+- name: Create admin group
   group:
     name: admin
     system: true
@@ -45,7 +45,7 @@
   tags:
     - accounts
 
-- name: Admin | Create admin user
+- name: Create admin user
   user:
     name: admin
     system: true
@@ -57,7 +57,7 @@
   tags:
     - accounts
 
-- name: Admin | Set admin users authorized key
+- name: Set admin users authorized key
   authorized_key:
     user: admin
     state: present
@@ -68,7 +68,7 @@
   tags:
     - accounts
 
-    #- name: Admin | Create required users
+    #- name: Create required users
     #user:
     #name: '{{ item.name }}'
     #system: true
@@ -82,7 +82,7 @@
     #tags:
     #- accounts
 
-    #- name: Admin | Add required users ssh keys
+    #- name: Add required users ssh keys
     #  authorized_key:
     #user: '{{ item.name }}'
     #state: present

@@ -1,10 +1,10 @@
 ---
 
-- name: FS | Create filesystems
+- name: Create filesystems
   filesystem:
     fstype: '{{ item.fstype }}'
     dev: '{{ item.src }}'
-    #resizefs: true
+    resizefs: true
   with_items:
     - '{{ default_mounts }}'
     - '{{ custom_mounts }}'

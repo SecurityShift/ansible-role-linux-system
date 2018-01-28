@@ -1,0 +1,15 @@
+---
+
+- name: Proxy all web requests via squid proxies
+  lineinfile:
+    path: /etc/profile.d/http_proxy.sh
+    regexp: '^export http_proxy=.*'
+    line: 'export http_proxy=http://proxy.{{ location }}.{{ base_domain }}:3128/'
+    owner: root
+    group: root
+    mode: 0644
+    state: present
+    create: yes
+  tags:
+    - proxy
+

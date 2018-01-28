@@ -1,10 +1,8 @@
 ---
 # handlers file for SecurityShift.common
 
-- name: restart firewalld
-  service:
-    name: firewalld
-    state: restarted
+- name: reload firewalld
+  command: firewall-cmd --reload
 
 - name: update aliases database
   command: newaliases

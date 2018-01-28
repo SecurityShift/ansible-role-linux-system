@@ -1,6 +1,6 @@
 ---
 
-- name: Yum | Add spacewalk to /etc/hosts
+- name: Add spacewalk to /etc/hosts
   lineinfile:
     path: /etc/hosts
     regexp: '^{{ spacewalk_ip | replace(".", "\.") }}.*$'
@@ -9,14 +9,14 @@
     group: root
     mode: 0644
 
-- name: Yum | Add spacewalk CA certificate to yum
+- name: Add spacewalk CA certificate to yum
   get_url:
     url: https://spacewalk.as7551.net/pub/RHN-ORG-TRUSTED-SSL-CERT
     dest: /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
     force: yes
     validate_certs: False
 
-- name: Yum | Add spacewalk CA certificate to trusted anchors
+- name: Add spacewalk CA certificate to trusted anchors
   get_url:
     url: https://spacewalk.as7551.net/pub/RHN-ORG-TRUSTED-SSL-CERT
     dest: /etc/pki/ca-trust/source/anchors/spacewalk.as7551.net.pem
@@ -24,7 +24,7 @@
     validate_certs: False
   register: spacewalk_ssl_ca
 
-- name: Yum | Update CA anchors
+- name: Update CA anchors
   command: update-ca-trust
   when: spacewalk_ssl_ca.changed
 
@@ -35,7 +35,7 @@
   #run_once: true
   #register: spacewalk_status
 
-- name: Yum | Register with spacewalk
+- name: Register with spacewalk
   rhn_register:
     state: present
     server_url: "https://{{ spacewalk_server}}/XMLRPC"
@@ -43,7 +43,7 @@
     #when:
     #- spacewalk_status.status == 200
 
-- name: Yum | Add channel gpg keys
+- name: Add channel gpg keys
   copy:
     src: "RPM-GPG-KEY-{{ item }}"
     dest: '/etc/pki/rpm-gpg/RPM-GPG-KEY-{{ item }}'
@@ -51,7 +51,7 @@
     - '{{ default_rhn_gpg_keys }}'
     - '{{ rhn_gpg_keys }}'
 
-- name: Yum | Import channel gpg keys
+- name: Import channel gpg keys
   rpm_key:
     state: present
     key: '/etc/pki/rpm-gpg/RPM-GPG-KEY-{{ item }}'
@@ -59,7 +59,7 @@
     - '{{ default_rhn_gpg_keys }}'
     - '{{ rhn_gpg_keys }}'
 
-- name: Yum | Subscribe to required channels
+- name: Subscribe to required channels
   rhn_channel:
     name: '{{ item }}'
     sysname: '{{ inventory_hostname }}'
@@ -72,7 +72,7 @@
     - '{{ default_rhn_channels }}'
     - '{{ rhn_channels }}'
 
-- name: Yum | Disable external yum repos
+- name: Disable external yum repos
   ini_file:
     dest: /etc/yum.conf
     section: main

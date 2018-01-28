@@ -1,6 +1,6 @@
 ---
 
-- name: Firewall | Make sure the firewall is running
+- name: Make sure the firewall is running
   service:
     name: firewalld
     state: started
@@ -9,7 +9,7 @@
     - security
     - firewall
 
-- name: Firewall | Add interfaces to firewall zone
+- name: Add interfaces to firewall zone
   firewalld:
     zone: '{{ item.zone }}'
     interface: '{{ item.ifname | default(item.conn_name) }}'
@@ -30,30 +30,32 @@
       - iface: '{{ item.ifname | default(conn_name) }}'
       - zone: '{{ item.zone }}'
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
 
-- name: Firewall | Make sure basic services can pass through firewall
+- name: Make sure basic services can pass through firewall
   firewalld:
     service: "{{ item.service }}"
     permanent: true
     immediate: true
-    zone: "{{ item.zone | default('public') }}"
+    zone: "{{ item.zone | default(omit) }}"
+    source: "{{ item.zone | default(omit) }}"
     state: enabled
   with_items:
     - '{{ firewall_default_services }}'
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
 
-- name: Firewall | Make sure user specified services can pass through firewall
+- name: Make sure user specified services can pass through firewall
   firewalld:
     service: "{{ item.service }}"
     zone: "{{ item.zone | default(omit) }}"
+    source: "{{ item.zone | default(omit) }}"
     permanent: true
     immediate: true
     state: enabled
@@ -62,15 +64,16 @@
     - firewall_allow_services is defined
     - item.service is defined
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
 
-- name: Firewall | Make sure user specified ports can pass through firewall
+- name: Make sure user specified ports can pass through firewall
   firewalld:
     port: "{{ item.port }}"
     zone: "{{ item.zone | default(omit) }}"
+    source: "{{ item.zone | default(omit) }}"
     permanent: true
     immediate: true
     state: enabled
@@ -79,12 +82,12 @@
     - firewall_allow_ports is defined
     - item.port is defined
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
 
-- name: Firewall | Check default policy
+- name: Check default policy
   command: firewall-cmd --get-default-zone
   register: current_firewall_default_zone
   changed_when: False
@@ -93,18 +96,18 @@
     - security
     - firewall
 
-- name: Firewall | Set drop as default policy
+- name: Set drop as default policy
   command: "firewall-cmd --set-default-zone={{ firewall_default_zone }}"
   when:
     - current_firewall_default_zone.stdout is defined
     - current_firewall_default_zone.stdout != firewall_default_zone
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
 
-- name: Firewall | Check logging of dropped packets
+- name: Check logging of dropped packets
   command: firewall-cmd --get-log-denied
   register: current_firewall_log_denied
   changed_when: False
@@ -119,7 +122,7 @@
     - current_firewall_log_denied.stdout is defined
     - current_firewall_log_denied.stdout != firewall_log_denied
   notify:
-    - restart firewalld
+    - reload firewalld
   tags:
     - security
     - firewall
