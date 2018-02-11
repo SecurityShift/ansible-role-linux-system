@@ -60,7 +60,7 @@
 - name: Set admin users authorized key
   authorized_key:
     user: admin
-    state: present
+    state: '{{ item.state | default("present") }}'
     comment: '{{ item.comment }}'
     key: '{{ item.key }}'
   with_items:

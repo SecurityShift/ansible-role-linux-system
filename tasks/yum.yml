@@ -9,12 +9,23 @@
     group: root
     mode: 0644
 
+- name: Check that spacewalk server is available
+  uri:
+    url: 'https://{{ spacewalk_server }}'
+    validate_certs: false
+  ignore_errors: true
+  run_once: true
+  register: spacewalk_status
+
 - name: Add spacewalk CA certificate to yum
   get_url:
     url: https://spacewalk.as7551.net/pub/RHN-ORG-TRUSTED-SSL-CERT
     dest: /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
     force: yes
     validate_certs: False
+  when:
+    - spacewalk_status.status is defined
+    - spacewalk_status.status == 200
 
 - name: Add spacewalk CA certificate to trusted anchors
   get_url:
@@ -23,25 +34,22 @@
     force: yes
     validate_certs: False
   register: spacewalk_ssl_ca
+  when:
+    - spacewalk_status.status is defined
+    - spacewalk_status.status == 200
 
 - name: Update CA anchors
   command: update-ca-trust
   when: spacewalk_ssl_ca.changed
-
-  #- name: Check that spacewalk server is available
-  #uri:
-  #  url: 'https://{{ spacewalk_server }}'
-  #ignore_errors: true
-  #run_once: true
-  #register: spacewalk_status
 
 - name: Register with spacewalk
   rhn_register:
     state: present
     server_url: "https://{{ spacewalk_server}}/XMLRPC"
     activationkey: "{{ spacewalk_key }}"
-    #when:
-    #- spacewalk_status.status == 200
+  when:
+    - spacewalk_status.status is defined
+    - spacewalk_status.status == 200
 
 - name: Add channel gpg keys
   copy:
@@ -62,12 +70,14 @@
 - name: Subscribe to required channels
   rhn_channel:
     name: '{{ item }}'
+    state: '{{ item.state | default("present") }}'
     sysname: '{{ inventory_hostname }}'
     url: 'https://{{ spacewalk_server }}/rpc/api'
     user: '{{ spacewalk_admin_user }}'
     password: '{{ spacewalk_admin_password }}'
-    #when:
-    #    - spacewalk_status.status == 200
+  when:
+    - spacewalk_status.status is defined
+    - spacewalk_status.status == 200
   with_items:
     - '{{ default_rhn_channels }}'
     - '{{ rhn_channels }}'
@@ -78,8 +88,9 @@
     section: main
     option: reposdir
     value: /etc/yum.repos.disabled
-    # when:
-    #- spacewalk_status.status == 200
+  when:
+    - spacewalk_status.status is defined
+    - spacewalk_status.status == 200
 
 - name: Update cache
   yum:

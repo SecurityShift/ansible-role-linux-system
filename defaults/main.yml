@@ -13,6 +13,7 @@ nmcli_bond_slave: []
 nmcli_ethernet: []
 nmcli_vlan: []
 
+firewalld_state: running
 firewall_default_zone: drop
 firewall_log_denied: all
 firewall_default_services:
@@ -34,8 +35,10 @@ mailaliases:
   - name: root
     alias: '{{ admin_email }}'
 
-physical_volumes: /dev/sda3
-volume_group: vg.01
+volume_groups:
+  - vg: vg.01
+    pvs: /dev/sda3
+custom_volume_groups: []
 rootvol_size: 8g
 homevol_size: 8g
 tmpvol_size: 1g
@@ -44,16 +47,22 @@ logvol_size: 2g
 auditvol_size: 2g
 logical_volumes:
   - lv: rootvol
+    vg: vg.01
     size: '{{ rootvol_size }}'
   - lv: homevol
+    vg: vg.01
     size: '{{ homevol_size }}'
   - lv: tmpvol
+    vg: vg.01
     size: '{{ tmpvol_size }}'
   - lv: varvol
+    vg: vg.01
     size: '{{ varvol_size }}'
   - lv: logvol
+    vg: vg.01
     size: '{{ logvol_size }}'
   - lv: auditvol
+    vg: vg.01
     size: '{{ auditvol_size }}'
 custom_logical_volumes: []
 

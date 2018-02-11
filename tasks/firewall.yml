@@ -3,7 +3,7 @@
 - name: Make sure the firewall is running
   service:
     name: firewalld
-    state: started
+    state: '{{ firewalld_state }}'
     enabled: yes
   tags:
     - security
@@ -25,6 +25,7 @@
     - item.zone is defined
     - item.ifname is defined
     - item.conn_name is defined
+    - firewalld_state != 'stopped'
   loop_control:
     label:
       - iface: '{{ item.ifname | default(conn_name) }}'
@@ -45,6 +46,8 @@
     state: enabled
   with_items:
     - '{{ firewall_default_services }}'
+  when:
+    - firewalld_state != 'stopped'
   notify:
     - reload firewalld
   tags:
@@ -63,6 +66,7 @@
   when:
     - firewall_allow_services is defined
     - item.service is defined
+    - firewalld_state != 'stopped'
   notify:
     - reload firewalld
   tags:
@@ -81,6 +85,7 @@
   when:
     - firewall_allow_ports is defined
     - item.port is defined
+    - firewalld_state != 'stopped'
   notify:
     - reload firewalld
   tags:
@@ -92,6 +97,8 @@
   register: current_firewall_default_zone
   changed_when: False
   check_mode: True
+  when:
+    - firewalld_state != 'stopped'
   tags:
     - security
     - firewall
@@ -101,6 +108,7 @@
   when:
     - current_firewall_default_zone.stdout is defined
     - current_firewall_default_zone.stdout != firewall_default_zone
+    - firewalld_state != 'stopped'
   notify:
     - reload firewalld
   tags:
@@ -112,6 +120,8 @@
   register: current_firewall_log_denied
   changed_when: False
   check_mode: True
+  when:
+    - firewalld_state != 'stopped'
   tags:
     - security
     - firewall
@@ -121,6 +131,7 @@
   when:
     - current_firewall_log_denied.stdout is defined
     - current_firewall_log_denied.stdout != firewall_log_denied
+    - firewalld_state != 'stopped'
   notify:
     - reload firewalld
   tags:

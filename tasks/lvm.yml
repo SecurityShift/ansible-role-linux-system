@@ -2,13 +2,16 @@
 
 - name: Create volume group
   lvg:
-    vg: '{{ volume_group }}'
-    pvs: '{{ physical_volumes }}'
+    vg: '{{ item.vg }}'
+    pvs: '{{ item.pvs }}'
+  with_items:
+    - '{{ volume_groups }}'
+    - '{{ custom_volume_groups }}'
 
 - name: Create logical volumes
   lvol:
     lv: '{{ item.lv }}'
-    vg: '{{ volume_group }}'
+    vg: '{{ item.vg }}'
     size: '{{ item.size }}'
   with_items:
     - '{{ logical_volumes }}'
