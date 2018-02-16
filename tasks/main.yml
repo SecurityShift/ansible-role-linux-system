@@ -22,25 +22,25 @@
   tags:
     - admin
 
-- name: Setup ssh server
-  import_tasks: ssh.yml
-  tags:
-    - ssh
+    #- name: Setup ssh server
+    #import_tasks: ssh.yml
+    #tags:
+    # - ssh
 
-- name: Setup Logical Volume Manager
-  import_tasks: lvm.yml
-  tags:
-    - lvm
+    #- name: Setup Logical Volume Manager
+    # import_tasks: lvm.yml
+    # tags:
+    # - lvm
 
-- name: Setup Filesystems
-  import_tasks: fs.yml
-  tags:
-    - fs
+    #- name: Setup Filesystems
+    #import_tasks: fs.yml
+    #tags:
+    # - fs
 
-- name: Configure filesystem mounts
-  import_tasks: mount.yml
-  tags:
-    - mount
+    #- name: Configure filesystem mounts
+    #import_tasks: mount.yml
+    #tags:
+    #- mount
 
     #- name: Setup network interfaces
     #import_tasks: network.yml
