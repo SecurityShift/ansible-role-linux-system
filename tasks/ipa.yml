@@ -33,7 +33,7 @@
     #- ipa
 - name: Check that ipa server is available
   uri:
-    url: 'https://{{ ipa_host }}'
+    url: 'https://{{ ipaserver_master }}'
     validate_certs: False
   ignore_errors: true
   run_once: true
