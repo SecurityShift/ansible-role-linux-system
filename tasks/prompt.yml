@@ -1,0 +1,12 @@
+---
+
+- name: Use FQDN in shell prompt
+  copy:
+    content: 'PS1="[\u@\H \W]\\$ "'
+    dest: /etc/profile.d/prompt.sh
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - prompt
+

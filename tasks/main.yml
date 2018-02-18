@@ -78,3 +78,8 @@
   tags:
     - environment
 
+- name: Setup shell prompt
+  import_tasks: prompt.yml
+  tags:
+    - prompt
+
