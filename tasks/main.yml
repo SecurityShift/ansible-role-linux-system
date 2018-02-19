@@ -73,11 +73,6 @@
   tags:
     - ossec
 
-- name: Setup shell environment
-  import_tasks: environment.yml
-  tags:
-    - environment
-
 - name: Setup shell prompt
   import_tasks: prompt.yml
   tags:
