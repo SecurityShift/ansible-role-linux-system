@@ -19,7 +19,7 @@
 
 - name: Add spacewalk CA certificate to yum
   get_url:
-    url: https://spacewalk.as7551.net/pub/RHN-ORG-TRUSTED-SSL-CERT
+    url: 'https://{{ spacewalk_server }}/pub/RHN-ORG-TRUSTED-SSL-CERT'
     dest: /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT
     force: yes
     validate_certs: False
@@ -29,8 +29,8 @@
 
 - name: Add spacewalk CA certificate to trusted anchors
   get_url:
-    url: https://spacewalk.as7551.net/pub/RHN-ORG-TRUSTED-SSL-CERT
-    dest: /etc/pki/ca-trust/source/anchors/spacewalk.as7551.net.pem
+    url: 'https://{{ spacewalk_server }}/pub/RHN-ORG-TRUSTED-SSL-CERT'
+    dest: '/etc/pki/ca-trust/source/anchors/{{ spacewalk_server }}.pem'
     force: yes
     validate_certs: False
   register: spacewalk_ssl_ca
