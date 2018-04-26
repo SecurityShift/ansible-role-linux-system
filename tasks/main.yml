@@ -12,10 +12,26 @@
   tags:
     - hostname
 
+- name: Setup shell prompt
+  import_tasks: prompt.yml
+  tags:
+    - prompt
+
+- name: Add motd
+  template:
+    src: motd.j2
+    dest: /etc/motd
+  tags:
+    - motd_config
+
 - name: Setup spacewalk agent
   import_tasks: yum.yml
   tags:
     - yum
+
+- name: Setup oVirt guest-agent
+  import_tasks: guestagent.yml
+  when: ansible_system_vendor == 'oVirt'
 
 - name: Setup root and admin users
   import_tasks: admin.yml
@@ -59,6 +75,7 @@
 
 - name: Setup IPA Client
   import_tasks: ipa.yml
+  when: "'ovirt' not in group_names"
   tags:
     - ipa
 
@@ -68,13 +85,28 @@
     - mail
 
 - name: Setup ossec-hids-agent
-  import_tasks: ossec.yml
+  import_role:
+    name: ossec-agent
   when: "'ossec' not in group_names"
   tags:
     - ossec
 
-- name: Setup shell prompt
-  import_tasks: prompt.yml
+- name: Setup icinga monitoring agent
+  import_role:
+    name: icinga
+    tasks_from: agent.yml
   tags:
-    - prompt
+    - monitoring
 
+- name: Setup ntp
+  import_role:
+    name: ntp
+  tags:
+    - ntp
+
+- name: Configure Dell System Updates
+  include_role:
+    name: dell-linux-firmware
+  when: ansible_system_vendor == "Dell Inc."
+  tags:
+    - dell

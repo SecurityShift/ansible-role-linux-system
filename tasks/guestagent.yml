@@ -1,0 +1,31 @@
+---
+
+- name: Add ovirt channel gpg keys
+  copy:
+    src: RPM-GPG-KEY-CentOS-SIG-Virtualization
+    dest: /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Virtualization
+
+- name: Import ovirt channel gpg keys
+  rpm_key:
+    state: present
+    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Virtualization
+
+- name: Subscribe to required ovirt channels
+  rhn_channel:
+    name: centos7-ovirt-4.2-x86_64
+    state: present
+    sysname: '{{ inventory_hostname }}'
+    url: 'https://{{ spacewalk_server }}/rpc/api'
+    user: '{{ spacewalk_admin_user }}'
+    password: '{{ spacewalk_admin_password }}'
+
+- name: Install ovirt-guest-agent
+  yum:
+    name: ovirt-guest-agent-common
+    state: present
+
+- name: Ensure ovirt-guest-agent services
+  service:
+    name: ovirt-guest-agent
+    state: started
+    enabled: true

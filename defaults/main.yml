@@ -14,10 +14,14 @@ nmcli_ethernet: []
 nmcli_vlan: []
 
 firewalld_state: started
+firewalld_enabled: True
 firewall_default_zone: drop
 firewall_log_denied: all
 firewall_default_services:
   - service: ssh
+firewall_allow_services: []
+firewall_default_ports: []
+firewall_allow_ports: []
 
 aliases: []
 default_mounts: []
@@ -71,4 +75,11 @@ rhn_channels: []
 default_rhn_gpg_keys: []
 rhn_gpg_keys: []
 
-...
+motd_info:
+  - " FQDN:    ": "{{ ansible_fqdn }}"
+  - " Distro:  ": "{{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}"
+  - " Virtual: ": "{{ 'YES' if ansible_virtualization_role is defined and ansible_virtualization_role == 'guest' else 'NO' }}\n"
+  - " CPUs:    ": "{{ ansible_processor_vcpus }}"
+  - " RAM:     ": "{{ (ansible_memtotal_mb / 1000) | round(1) }}GB"
+
+

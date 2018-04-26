@@ -13,3 +13,5 @@ galaxy_info:
     - configuration
     - firewall
     - selinix
+dependencies:
+  - role: opsview-modules

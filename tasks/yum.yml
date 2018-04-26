@@ -8,14 +8,15 @@
     owner: root
     group: root
     mode: 0644
+  when: inventory_hostname not in groups['spacewalk']
 
 - name: Check that spacewalk server is available
   uri:
     url: 'https://{{ spacewalk_server }}'
     validate_certs: false
   ignore_errors: true
-  run_once: true
   register: spacewalk_status
+  check_mode: no
 
 - name: Add spacewalk CA certificate to yum
   get_url:
@@ -24,7 +25,6 @@
     force: yes
     validate_certs: False
   when:
-    - spacewalk_status.status is defined
     - spacewalk_status.status == 200
 
 - name: Add spacewalk CA certificate to trusted anchors
@@ -35,7 +35,6 @@
     validate_certs: False
   register: spacewalk_ssl_ca
   when:
-    - spacewalk_status.status is defined
     - spacewalk_status.status == 200
 
 - name: Update CA anchors
@@ -48,7 +47,6 @@
     server_url: "https://{{ spacewalk_server}}/XMLRPC"
     activationkey: "{{ spacewalk_key }}"
   when:
-    - spacewalk_status.status is defined
     - spacewalk_status.status == 200
 
 - name: Add channel gpg keys
@@ -76,7 +74,6 @@
     user: '{{ spacewalk_admin_user }}'
     password: '{{ spacewalk_admin_password }}'
   when:
-    - spacewalk_status.status is defined
     - spacewalk_status.status == 200
   with_items:
     - '{{ default_rhn_channels }}'
@@ -89,13 +86,11 @@
     option: reposdir
     value: /etc/yum.repos.disabled
   when:
-    - spacewalk_status.status is defined
     - spacewalk_status.status == 200
 
-- name: Update cache
+- name: Remove cloud-init & update cache
   yum:
     name: cloud-init
     state: absent
     update_cache: true
 
-...

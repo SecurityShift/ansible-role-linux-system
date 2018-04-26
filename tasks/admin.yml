@@ -8,7 +8,7 @@
   tags:
     - accounts
 
-- name: Create root user
+- name: Set root password
   user:
     name: root
     system: true

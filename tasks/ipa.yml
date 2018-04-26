@@ -36,8 +36,10 @@
     url: 'https://{{ ipaserver_master }}'
     validate_certs: False
   ignore_errors: true
-  run_once: true
   register: ipa_status
+  check_mode: no
+  tags:
+    - ipaclient
 
 - name: Setup IPA client
   import_role:

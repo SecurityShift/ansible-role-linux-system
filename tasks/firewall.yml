@@ -4,7 +4,7 @@
   service:
     name: firewalld
     state: '{{ firewalld_state }}'
-    enabled: yes
+    enabled: '{{ firewalld_enabled }}'
   tags:
     - security
     - firewall
@@ -36,7 +36,7 @@
     - security
     - firewall
 
-- name: Make sure basic services can pass through firewall
+- name: Make sure services can pass through firewall
   firewalld:
     service: "{{ item.service }}"
     permanent: true
@@ -46,6 +46,7 @@
     state: enabled
   with_items:
     - '{{ firewall_default_services }}'
+    - "{{ firewall_allow_services }}"
   when:
     - firewalld_state != 'stopped'
   notify:
@@ -54,26 +55,7 @@
     - security
     - firewall
 
-- name: Make sure user specified services can pass through firewall
-  firewalld:
-    service: "{{ item.service }}"
-    zone: "{{ item.zone | default(omit) }}"
-    source: "{{ item.zone | default(omit) }}"
-    permanent: true
-    immediate: true
-    state: enabled
-  with_items: "{{ firewall_allow_services }}"
-  when:
-    - firewall_allow_services is defined
-    - item.service is defined
-    - firewalld_state != 'stopped'
-  notify:
-    - reload firewalld
-  tags:
-    - security
-    - firewall
-
-- name: Make sure user specified ports can pass through firewall
+- name: Make sure ports can pass through firewall
   firewalld:
     port: "{{ item.port }}"
     zone: "{{ item.zone | default(omit) }}"
@@ -81,10 +63,10 @@
     permanent: true
     immediate: true
     state: enabled
-  with_items: "{{ firewall_allow_ports }}"
+  with_items:
+    - "{{ firewall_default_ports }}"
+    - "{{ firewall_allow_ports }}"
   when:
-    - firewall_allow_ports is defined
-    - item.port is defined
     - firewalld_state != 'stopped'
   notify:
     - reload firewalld
@@ -137,5 +119,8 @@
   tags:
     - security
     - firewall
+
+- name: Run handlers to reload firewall
+  meta: flush_handlers
 
 ...
