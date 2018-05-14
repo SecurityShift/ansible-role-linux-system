@@ -1,112 +1,140 @@
 ---
 # tasks file for common
 
-- name: Check required variables
-  fail: msg="Variable "{{ item }}" is not defined"
-  when: item not in vars
-  with_items: "{{required_vars}}"
-  changed_when: False
-
-- name: Setup hostname
-  import_tasks: hostname.yml
+- import_role:
+    name: ansible
   tags:
-    - hostname
+    - ansible
 
-- name: Setup shell prompt
-  import_tasks: prompt.yml
+- import_role:
+    name: spacewalk-client
   tags:
+    - spacewalk
+
+- import_role:
+    name: ovirt-virtual-machine
+    tasks_from: guestagent.yml
+  when: ansible_system_vendor == 'oVirt'
+  tags:
+    - ovirt
+
+- import_role:
+    name: icinga-agent
+    tasks_from: nrpe.yml
+  tags:
+    - monitoring
+
+- import_role:
+    name: freeipa-client
+  tags:
+    - freeipa-client
+
+- import_role:
+    name: certmonger
+  tags:
+    - certmonger
+
+- import_role:
+   name: ssh
+  tags:
+    - ssh
+
+- import_role:
+    name: selinux
+  tags:
+    - selinux
+
+- import_role:
+    name: firewalld
+  tags:
+    - firewall
+
+- import_role:
+    name: postfix
+  tags:
+    - mail
+
+- import_role:
+    name: ossec-agent
+  when: ossec_host_group not in group_names
+  tags:
+    - ossec
+
+- import_role:
+    name: chrony
+  when: "'ipaservers' not in group_names"
+  tags:
+    - ntp
+
+# FreeIPA doesnt yet support chrony on server
+- import_role:
+    name: ntp
+  when: "'ipaservers' in group_names"
+  tags:
+    - ntp
+
+- import_role:
+    name: logrotate
+  tags:
+    - logrotate
+
+- import_role:
+    name: dell-system-updates
+  when: ansible_system_vendor == "Dell Inc."
+  tags:
+    - dell
+- name: Use FQDN in shell prompt
+  copy:
+    content: 'PS1="[\u@\H \W]\\$ "'
+    dest: /etc/profile.d/prompt.sh
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - shell
     - prompt
 
-- name: Add motd
+- name: Add motd, for post authentication
   template:
     src: motd.j2
     dest: /etc/motd
   tags:
-    - motd_config
+    - shell
+    - motd
 
-- name: Setup spacewalk agent
-  import_tasks: yum.yml
+- name: Add issue, for pre authentication
+  template:
+    src: issue.j2
+    dest: /etc/{{ item }}
+  with_items:
+    - issue
+    - issue.net
   tags:
-    - yum
-
-- name: Setup oVirt guest-agent
-  import_tasks: guestagent.yml
-  when: ansible_system_vendor == 'oVirt'
-
-- name: Setup root and admin users
-  import_tasks: admin.yml
-  tags:
-    - admin
-
-    #- name: Setup ssh server
-    #import_tasks: ssh.yml
-    #tags:
-    # - ssh
+    - issue
+    - shell
 
 - name: Setup Logical Volume Manager
   import_tasks: lvm.yml
   tags:
     - lvm
+    - storage
 
 - name: Setup Filesystems
   import_tasks: fs.yml
   tags:
     - fs
+    - storage
 
 - name: Configure filesystem mounts
   import_tasks: mount.yml
   tags:
     - mount
+    - storage
 
-    #- name: Setup network interfaces
-    #import_tasks: network.yml
-    #tags:
-    #- network
+- name: Install useful packages
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - vim-enhanced
 
-- name: Setup SELinux
-  import_tasks: selinux.yml
-  tags:
-    - selinux
-
-- name: Sertup firewalld
-  import_tasks: firewall.yml
-  tags:
-    - firewall
-
-- name: Setup IPA Client
-  import_tasks: ipa.yml
-  when: "'ovirt' not in group_names"
-  tags:
-    - ipa
-
-- name: Setup postfix mail relaying
-  import_tasks: mail.yml
-  tags:
-    - mail
-
-- name: Setup ossec-hids-agent
-  import_role:
-    name: ossec-agent
-  when: "'ossec' not in group_names"
-  tags:
-    - ossec
-
-- name: Setup icinga monitoring agent
-  import_role:
-    name: icinga
-    tasks_from: agent.yml
-  tags:
-    - monitoring
-
-- name: Setup ntp
-  import_role:
-    name: ntp
-  tags:
-    - ntp
-
-- name: Configure Dell System Updates
-  include_role:
-    name: dell-linux-firmware
-  when: ansible_system_vendor == "Dell Inc."
-  tags:
-    - dell

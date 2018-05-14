@@ -1,27 +1,11 @@
 ---
 # defaults file for SecurityShift.common
 
-selinux_state: enforcing
-
-required_vars:
-  - 'spacewalk_server'
-  - 'spacewalk_key'
-  - 'spacewalk_ip'
 
 nmcli_bond: []
 nmcli_bond_slave: []
 nmcli_ethernet: []
 nmcli_vlan: []
-
-firewalld_state: started
-firewalld_enabled: True
-firewall_default_zone: drop
-firewall_log_denied: all
-firewall_default_services:
-  - service: ssh
-firewall_allow_services: []
-firewall_default_ports: []
-firewall_allow_ports: []
 
 aliases: []
 default_mounts: []
@@ -70,11 +54,6 @@ logical_volumes:
     size: '{{ auditvol_size }}'
 custom_logical_volumes: []
 
-default_rhn_channels: []
-rhn_channels: []
-default_rhn_gpg_keys: []
-rhn_gpg_keys: []
-
 motd_info:
   - " FQDN:    ": "{{ ansible_fqdn }}"
   - " Distro:  ": "{{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}"
@@ -82,4 +61,4 @@ motd_info:
   - " CPUs:    ": "{{ ansible_processor_vcpus }}"
   - " RAM:     ": "{{ (ansible_memtotal_mb / 1000) | round(1) }}GB"
 
-
+ossec_host_group: ossec

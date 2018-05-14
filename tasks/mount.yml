@@ -11,9 +11,7 @@
     - '{{ default_mounts }}'
     - '{{ custom_mounts }}'
   tags:
-    - hardening
     - security
-    - mount
 
     #- name: Install | Blacklist various modules
     # copy:
