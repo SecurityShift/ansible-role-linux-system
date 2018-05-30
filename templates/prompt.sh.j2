@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+# Use the FQDN in the prompt
+{% if is_production %}
+# And color red
+PS1='[\[\e[1;31m\]\u@\H\[\e[0m\] \W]\$ '
+{% else %}
+PS1='[\u@\H \W]\$ '
+{% endif %}

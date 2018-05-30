@@ -1,10 +1,78 @@
 ---
 # tasks file for common
 
-- import_role:
-    name: ansible
+- name: Set hostname
+  hostname:
+    name={{ inventory_hostname }}
   tags:
-    - ansible
+    - config
+
+- name: Add entry to /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }}"
+    state: present
+  tags:
+    - config
+
+- name: Set timezone to UTC
+  timezone:
+    name: Etc/UTC
+  tags:
+    - timezone
+
+- name: Set root password
+  user:
+    name: root
+    system: true
+    comment: "Root User"
+    uid: 0
+    group: root
+    password: '{{ root_password_hash }}'
+  tags:
+    - rootuser
+
+- name: Create admin and sshusers group
+  group:
+    name: '{{ item.name }}'
+    system: true
+    gid: '{{ item.gid }}'
+    state: present
+  with_items:
+    - { name: admin, gid: 1000 }
+    - { name: sshusers, gid: 500 }
+  tags:
+    - adminuser
+
+- name: Create admin user in wheel and sshusers group
+  user:
+    name: admin
+    system: true
+    comment: "Admin User"
+    uid: 1000
+    group: admin
+    groups: [ wheel, sshusers ]
+    password: '{{ admin_password_hash }}'
+  tags:
+    - adminuser
+
+- name: Remove centos user from cloudinit
+  user:
+    name: centos
+    state: absent
+    remove: true
+  tags:
+    - adminuser
+
+- name: Set admin users authorized key
+  authorized_key:
+    user: admin
+    state: present
+    key: '{{ admin_ssh_keys | join("\n") }}'
+    exclusive: true
+  tags:
+    - adminuser
+    - ssh
 
 - import_role:
     name: spacewalk-client
@@ -19,15 +87,20 @@
     - ovirt
 
 - import_role:
+    name: freeipa-client
+  tags:
+    - freeipa-client
+
+- import_role:
+    name: firewalld
+  tags:
+    - firewall
+
+- import_role:
     name: icinga-agent
     tasks_from: nrpe.yml
   tags:
     - monitoring
-
-- import_role:
-    name: freeipa-client
-  tags:
-    - freeipa-client
 
 - import_role:
     name: certmonger
@@ -43,11 +116,6 @@
     name: selinux
   tags:
     - selinux
-
-- import_role:
-    name: firewalld
-  tags:
-    - firewall
 
 - import_role:
     name: postfix
@@ -78,14 +146,15 @@
   tags:
     - logrotate
 
-- import_role:
+- include_role:
     name: dell-system-updates
   when: ansible_system_vendor == "Dell Inc."
   tags:
     - dell
+
 - name: Use FQDN in shell prompt
-  copy:
-    content: 'PS1="[\u@\H \W]\\$ "'
+  template:
+    src: prompt.sh.j2
     dest: /etc/profile.d/prompt.sh
     owner: root
     group: root
@@ -98,6 +167,9 @@
   template:
     src: motd.j2
     dest: /etc/motd
+    owner: root
+    group: root
+    mode: 0644
   tags:
     - shell
     - motd
@@ -106,6 +178,9 @@
   template:
     src: issue.j2
     dest: /etc/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
   with_items:
     - issue
     - issue.net
