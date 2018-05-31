@@ -76,6 +76,7 @@
 
 - import_role:
     name: spacewalk-client
+  when: spacewalk_server
   tags:
     - spacewalk
 
@@ -88,6 +89,7 @@
 
 - import_role:
     name: freeipa-client
+  when: ipaserver_master
   tags:
     - freeipa-client
 
@@ -104,6 +106,7 @@
 
 - import_role:
     name: certmonger
+  when: ipaserver_master
   tags:
     - certmonger
 
@@ -124,7 +127,7 @@
 
 - import_role:
     name: ossec-agent
-  when: ossec_host_group not in group_names
+  when: ossec_host_group not in group_names and ossec_managed_server
   tags:
     - ossec
 
