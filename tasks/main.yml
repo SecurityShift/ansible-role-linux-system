@@ -76,6 +76,7 @@
 
 - import_role:
     name: spacewalk-client
+  when: spacewalk_server is defined
   tags:
     - spacewalk
 
@@ -88,6 +89,7 @@
 
 - import_role:
     name: freeipa-client
+  when: ipaserver_master is defined
   tags:
     - freeipa-client
 
@@ -104,6 +106,7 @@
 
 - import_role:
     name: certmonger
+  when: ipaserver_master is defined
   tags:
     - certmonger
 
