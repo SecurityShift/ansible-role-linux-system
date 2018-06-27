@@ -209,6 +209,18 @@
     - mount
     - storage
 
+- import_role:
+    name: rsyslog
+  when: rsyslog_server is defined
+  tags:
+    - rsyslog
+
+- import_role:
+    name: filebeat
+  when: rsyslog_server is defined
+  tags:
+    - filebeat
+
 - name: Install useful packages
   yum:
     name: '{{ item }}'
