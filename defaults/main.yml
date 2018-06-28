@@ -1,7 +1,7 @@
 ---
 # defaults file for SecurityShift.common
 
-is_production: true
+prompt_colour: red
 
 nmcli_bond: []
 nmcli_bond_slave: []

@@ -195,19 +195,19 @@
   import_tasks: lvm.yml
   tags:
     - lvm
-    - storage
+    - disk
 
 - name: Setup Filesystems
   import_tasks: fs.yml
   tags:
     - fs
-    - storage
+    - disk
 
 - name: Configure filesystem mounts
   import_tasks: mount.yml
   tags:
     - mount
-    - storage
+    - disk
 
 - import_role:
     name: rsyslog
@@ -226,5 +226,8 @@
     name: '{{ item }}'
     state: installed
   with_items:
+    - bash-completion
+    - zsh
     - vim-enhanced
-
+  tags:
+    - basics

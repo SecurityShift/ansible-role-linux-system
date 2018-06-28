@@ -7,6 +7,9 @@
   with_items:
     - '{{ volume_groups }}'
     - '{{ custom_volume_groups }}'
+  tags:
+    - lvm
+    - disk
 
 - name: Create logical volumes
   lvol:
@@ -16,3 +19,6 @@
   with_items:
     - '{{ logical_volumes }}'
     - '{{ custom_logical_volumes }}'
+  tags:
+    - lvm
+    - disk

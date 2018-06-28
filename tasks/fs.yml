@@ -8,5 +8,6 @@
   with_items:
     - '{{ default_mounts }}'
     - '{{ custom_mounts }}'
-
-...
+  tags:
+    - fs
+    - disk
