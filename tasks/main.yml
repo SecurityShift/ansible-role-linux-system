@@ -283,10 +283,10 @@
     - audit
     - security
 
-- name: Apply CIS audit rules
+- name: Apply CIS & STIG audit rules
   copy:
-    src: audit.rules
-    dest: /etc/audit/rules.d/cis.rules
+    src: security.rules
+    dest: /etc/audit/rules.d/security.rules
     owner: root
     group: root
     mode: 0600
