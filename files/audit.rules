@@ -1,5 +1,6 @@
 # Ansible managed
-s file contains the auditctl rules that are loaded
+#
+# This file contains the auditctl rules that are loaded
 # whenever the audit daemon is started via the initscripts.
 # The rules are simply the parameters that would be passed
 # to auditctl.
@@ -81,6 +82,24 @@ s file contains the auditctl rules that are loaded
 -w /sbin/rmmod -p x -k modules
 -w /sbin/modprobe -p x -k modules
 -a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+
+# Record Attempts to Alter Logon and Logout Events - faillock
+-w /var/run/faillock/ -p wa -k logins
+
+# Record Any Attempts to Run semanage
+-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged-priv_change
+
+# Record Any Attempts to Run setsebool
+-a always,exit -F path=/usr/sbin/setsebool -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged-priv_change
+
+# Record Any Attempts to Run chcon
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged-priv_change
+
+# Record Any Attempts to Run restorecon
+-a always,exit -F path=/usr/sbin/restorecon -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged-priv_change
+
+# Ensure auditd Collects Information on Exporting to Media (successful)
+-a always,exit -F arch=ARCH -S mount -F auid>=1000 -F auid!=4294967295 -F key=export
 
 # 5.2.18 Make the Audit Configuration Immutable
 -e 2
