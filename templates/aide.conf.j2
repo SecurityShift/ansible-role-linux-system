@@ -80,17 +80,17 @@ PERMS = p+u+g+acl+selinux+xattrs
 STATIC = p+u+g+acl+selinux+xattrs+i+n+b+c+ftype
 
 # Logfiles only check access w/o xattrs.
-LOG = p+u+g+n+acl+selinux+ftype
+LOG = p+u+g+n+acl+selinux+ftype+xattrs
 
 # Content + file type.
-CONTENT = sha256+ftype
+CONTENT = sha512+ftype
 
 # Extended content + file type + access.
-CONTENT_EX = sha256+ftype+p+u+g+n+acl+selinux+xattrs
+CONTENT_EX = sha512+ftype+p+u+g+n+acl+selinux+xattrs
 
 # Some files get updated automatically, so the inode/ctime/mtime change
 # but we want to know when the data inside them changes.
-DATAONLY =  p+n+u+g+s+acl+selinux+xattrs+sha256
+DATAONLY =  p+n+u+g+s+acl+selinux+xattrs+sha512
 
 # Next decide what directories/files you want in the database. Aide
 # uses a first match system. Put file specific instructions before generic
@@ -310,3 +310,12 @@ DATAONLY =  p+n+u+g+s+acl+selinux+xattrs+sha256
 
 # Ditto /var/log/sa/ same reason...
 !/var/log/httpd/
+
+# The following two lines apply the NORMAL rule (above this line) to the
+# /bin and /sbin directories to meet the requirements of two STIG controls:
+#
+#   V-72069 - Verify ACLs
+#   V-72071 - Verify extended attributes
+#
+/bin    NORMAL
+/sbin   NORMAL
