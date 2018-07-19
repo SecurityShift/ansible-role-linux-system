@@ -11,3 +11,6 @@
     state: restarted
     use: service
 
+- name: update grub config
+  command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+
