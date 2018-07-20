@@ -74,7 +74,7 @@ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local ; do
 done
 
 # Set Interactive Session Timeout
-TMOUT=600
+readonly TMOUT={{ shell_timeout }}
 
 unset i
 unset -f pathmunge
