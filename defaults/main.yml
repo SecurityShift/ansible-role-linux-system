@@ -65,3 +65,7 @@ motd_info:
 ossec_host_group: ossec
 
 shell_timeout: 600
+
+required_packages: []
+
+create_admin_users: True

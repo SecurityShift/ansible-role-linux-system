@@ -41,6 +41,7 @@
   with_items:
     - { name: admin, gid: 1000 }
     - { name: sshusers, gid: 500 }
+  when: create_admin_users
   tags:
     - adminuser
 
@@ -53,6 +54,7 @@
     group: admin
     groups: [ wheel, sshusers ]
     password: '{{ admin_password_hash }}'
+  when: create_admin_users
   tags:
     - adminuser
 
@@ -61,6 +63,7 @@
     name: centos
     state: absent
     remove: true
+  when: create_admin_users
   tags:
     - adminuser
 
@@ -70,6 +73,7 @@
     state: present
     key: '{{ admin_ssh_keys | join("\n") }}'
     exclusive: true
+  when: create_admin_users
   tags:
     - adminuser
     - ssh
