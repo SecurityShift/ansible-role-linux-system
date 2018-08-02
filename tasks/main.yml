@@ -240,6 +240,13 @@
   tags:
     - filebeat
 
+- import_role:
+    name: veeam-agent
+  when: install_veeam_agent
+  tags:
+    - backups
+    - veeam
+
 - name: Install useful packages
   yum:
     name: '{{ item }}'

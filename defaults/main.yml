@@ -69,3 +69,5 @@ shell_timeout: 600
 required_packages: []
 
 create_admin_users: True
+
+install_veeam_agent: False
