@@ -1,6 +1,8 @@
 ---
 # defaults file for SecurityShift.linux-system
 
+linux_system_role_git_repo: https://github.com/SecurityShift/ansible-role-linux-system
+
 prompt_colour: red
 
 nmcli_bond: []
@@ -56,11 +58,13 @@ logical_volumes:
 custom_logical_volumes: []
 
 motd_info:
-  - " FQDN:    ": "{{ ansible_fqdn }}"
-  - " Distro:  ": "{{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}"
-  - " Virtual: ": "{{ 'YES' if ansible_virtualization_role is defined and ansible_virtualization_role == 'guest' else 'NO' }}\n"
-  - " CPUs:    ": "{{ ansible_processor_vcpus }}"
-  - " RAM:     ": "{{ (ansible_memtotal_mb / 1000) | round(1) }}GB"
+  - " FQDN    : {{ ansible_fqdn }}"
+  - " Distro  : {{ ansible_distribution }} {{ ansible_distribution_version }} {{ ansible_distribution_release }}"
+  - " Virtual : {{ 'YES' if ansible_virtualization_role is defined and ansible_virtualization_role == 'guest' else 'NO' }}\n"
+  - " CPUs    : {{ ansible_processor_vcpus }}"
+  - " RAM     : {{ (ansible_memtotal_mb / 1000) | round(1) }}GB\n"
+  - " Ansible Managed - DO NOT EDIT!"
+  - " See https://github.com/SecurityShift/ansible-playbooks"
 
 ossec_host_group: ossec
 
@@ -71,3 +75,5 @@ required_packages: []
 create_admin_users: True
 
 install_veeam_agent: False
+
+sysctl_ip_forwarding: 0

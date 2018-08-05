@@ -1,3 +1,6 @@
+# Ansible Managed - DO NOT EDIT!
+# See https://github.com/SecurityShift/ansible-role-linux-system/blob/master/files/RPM-GPG-KEY-elasticsearch
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v2.0.14 (GNU/Linux)
 
