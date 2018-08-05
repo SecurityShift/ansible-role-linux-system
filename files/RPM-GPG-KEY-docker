@@ -1,3 +1,6 @@
+# Ansible Managed - DO NOT EDIT!
+# See https://github.com/SecurityShift/ansible-role-linux-system/blob/master/files/RPM-GPG-KEY-docker
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBFit5IEBEADDt86QpYKz5flnCsOyZ/fk3WwBKxfDjwHf/GIflo+4GWAXS7wJ

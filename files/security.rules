@@ -1,5 +1,6 @@
-# Ansible managed
-#
+# Ansible Managed - DO NOT EDIT!
+# See https://github.com/SecurityShift/ansible-role-linux-system/blob/master/files/security.rules
+
 # This file contains the auditctl rules that are loaded
 # whenever the audit daemon is started via the initscripts.
 # The rules are simply the parameters that would be passed

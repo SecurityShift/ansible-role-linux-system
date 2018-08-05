@@ -1,3 +1,6 @@
+# Ansible Managed - DO NOT EDIT!
+# See https://github.com/SecurityShift/ansible-role-linux-system/blob/master/files/RPM-GPG-KEY-spacewalk-2.8-client
+
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQENBFq8/OUBCADOrCfMA+eS6XgViEBAyyoZIYdI7vUuvL1gFnaGnXaPwV+EQaKZ
