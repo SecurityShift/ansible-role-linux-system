@@ -40,19 +40,18 @@
     state: present
   with_items:
     - { name: admin, gid: 1000 }
-    - { name: sshusers, gid: 500 }
   when: create_admin_users
   tags:
     - adminuser
 
-- name: Create admin user in wheel and sshusers group
+- name: Create admin user in wheel group
   user:
     name: admin
     system: true
     comment: "Admin User"
     uid: 1000
     group: admin
-    groups: [ wheel, sshusers ]
+    groups: [ wheel ]
     password: '{{ admin_password_hash }}'
   when: create_admin_users
   tags:
