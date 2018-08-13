@@ -21,6 +21,15 @@
   tags:
     - timezone
 
+- name: Remove centos user from cloudinit
+  user:
+    name: centos
+    state: absent
+    remove: true
+  when: create_admin_users
+  tags:
+    - adminuser
+
 - name: Set root password
   user:
     name: root
@@ -39,7 +48,7 @@
     gid: '{{ item.gid }}'
     state: present
   with_items:
-    - { name: admin, gid: 1000 }
+    - { name: admin, gid: '{{ admin_group_id }}' }
   when: create_admin_users
   tags:
     - adminuser
@@ -49,19 +58,11 @@
     name: admin
     system: true
     comment: "Admin User"
-    uid: 1000
+    uid: '{{ admin_user_id }}'
     group: admin
     groups: [ wheel ]
     password: '{{ admin_password_hash }}'
-  when: create_admin_users
-  tags:
-    - adminuser
-
-- name: Remove centos user from cloudinit
-  user:
-    name: centos
-    state: absent
-    remove: true
+    expires: -1
   when: create_admin_users
   tags:
     - adminuser
@@ -135,7 +136,7 @@
     name: ossec-agent
   when: ossec_host_group not in group_names and ossec_managed_server
   tags:
-    - ossecagent
+    - ossec
 
 - import_role:
     name: chrony
