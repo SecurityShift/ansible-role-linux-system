@@ -26,6 +26,9 @@ mailaliases:
   - name: root
     alias: '{{ admin_email }}'
 
+admin_user_id: 1000
+admin_group_id: 1000
+
 volume_groups:
   - vg: vg.01
     pvs: /dev/sda3
