@@ -11,8 +11,6 @@ nmcli_ethernet: []
 nmcli_vlan: []
 
 aliases: []
-default_mounts: []
-custom_mounts: []
 
 admin_interface:
   - name: bond0
@@ -28,37 +26,6 @@ mailaliases:
 
 admin_user_id: 1000
 admin_group_id: 1000
-
-volume_groups:
-  - vg: vg.01
-    pvs: /dev/sda3
-custom_volume_groups: []
-rootvol_size: 8g
-homevol_size: 8g
-tmpvol_size: 1g
-varvol_size: 4g
-logvol_size: 2g
-auditvol_size: 2g
-logical_volumes:
-  - lv: rootvol
-    vg: vg.01
-    size: '{{ rootvol_size }}'
-  - lv: homevol
-    vg: vg.01
-    size: '{{ homevol_size }}'
-  - lv: tmpvol
-    vg: vg.01
-    size: '{{ tmpvol_size }}'
-  - lv: varvol
-    vg: vg.01
-    size: '{{ varvol_size }}'
-  - lv: logvol
-    vg: vg.01
-    size: '{{ logvol_size }}'
-  - lv: auditvol
-    vg: vg.01
-    size: '{{ auditvol_size }}'
-custom_logical_volumes: []
 
 motd_info:
   - " FQDN    : {{ ansible_fqdn }}"
