@@ -210,22 +210,10 @@
     - issue
     - shell
 
-- name: Setup Logical Volume Manager
-  import_tasks: lvm.yml
+- import_role:
+    name: lvm
   tags:
     - lvm
-    - disk
-
-- name: Setup Filesystems
-  import_tasks: fs.yml
-  tags:
-    - fs
-    - disk
-
-- name: Configure filesystem mounts
-  import_tasks: mount.yml
-  tags:
-    - mount
     - disk
 
 - import_role:
