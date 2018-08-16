@@ -2,7 +2,7 @@ galaxy_info:
   author: Ben O'Hara
   description: Configure EL7 hosts
   company: SecurityShift
-  issue_tracker_url: http://github.com/SecurityShift/ansible-role-linux-system/issue/tracker
+  issue_tracker_url: https://github.com/SecurityShift/ansible-role-linux-system/issues
   license: BSD
   min_ansible_version: 2.5
   platforms:
