@@ -289,6 +289,7 @@
   shell: "find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null | cat"
   check_mode: no
   register: audit_privileged_commands
+  changed_when: False
   tags:
     - config
     - audit
@@ -477,7 +478,7 @@
     hour: "{{ 24 | random(seed=inventory_hostname) }}"
     weekday: 0
     user: root
-    job: "/usr/sbin/aide --check | /bin/mail -s "$(hostname) - AIDE Integrity Check" {{ admin_email }}"
+    job: '/usr/sbin/aide --check | /bin/mail -s "$(hostname) - AIDE Integrity Check" {{ admin_email }}'
   tags:
     - aide
     - security
