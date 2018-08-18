@@ -47,3 +47,5 @@ create_admin_users: True
 install_veeam_agent: False
 
 sysctl_ip_forwarding: 0
+
+audit_privileged_commands: []
