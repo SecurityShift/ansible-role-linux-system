@@ -1,5 +1,5 @@
 ---
-# defaults file for SecurityShift.linux-system
+# defaults file for linux-system
 
 linux_system_role_git_repo: https://github.com/SecurityShift/ansible-role-linux-system
 

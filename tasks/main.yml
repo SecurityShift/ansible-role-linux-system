@@ -1,19 +1,21 @@
 ---
-# tasks file for common
+# tasks file for linux-system
 
 - name: Set hostname
   hostname:
-    name={{ inventory_hostname }}
+    name: '{{ inventory_hostname }}'
   tags:
     - config
+    - hostname
 
 - name: Add entry to /etc/hosts
   lineinfile:
     dest: /etc/hosts
-    line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }}"
+    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }}"
     state: present
   tags:
     - config
+    - hostname
 
 - name: Set timezone to UTC
   timezone:
