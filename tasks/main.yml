@@ -283,9 +283,18 @@
     - audit
     - security
 
+- name: Search for privileged commands
+  shell: "find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null | cat"
+  check_mode: no
+  register: audit_privileged_commands
+  tags:
+    - config
+    - audit
+    - security
+
 - name: Apply CIS & STIG audit rules
-  copy:
-    src: security.rules
+  template:
+    src: security.rules.j2
     dest: /etc/audit/rules.d/security.rules
     owner: root
     group: root
@@ -455,6 +464,18 @@
     owner: root
     group: root
     mode: 0600
+  tags:
+    - aide
+    - security
+
+- name: "Configure Periodic Execution of AIDE"
+  cron:
+    name: "run AIDE check"
+    minute: 05
+    hour: 04
+    weekday: 0
+    user: root
+    job: "/usr/sbin/aide --check | /bin/mail -s "$(hostname) - AIDE Integrity Check" {{ admin_email }}"
   tags:
     - aide
     - security
