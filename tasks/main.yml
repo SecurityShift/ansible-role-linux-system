@@ -214,6 +214,7 @@
 
 - import_role:
     name: lvm
+  when: logical_volumes != []
   tags:
     - lvm
     - disk
@@ -366,7 +367,7 @@
     - config
     - security
 
-- name: Ensure sysctl net.ipv4.ip_forward is set to 0
+- name: Ensure sysctl net.ipv4.ip_forward is set correctly
   sysctl:
     name: net.ipv4.ip_forward
     value: '{{ sysctl_ip_forwarding }}'
@@ -459,6 +460,14 @@
   tags:
     - grub
     - security
+
+- name: Install aide
+  yum:
+    name: aide
+    state: installed
+  tags:
+    - aide
+    - install
 
 - name: Add aide config
   template:
