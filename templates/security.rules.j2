@@ -170,6 +170,8 @@
 -a always,exit -F arch=b64 -S mount -F auid>=1000 -F auid!=4294967295 -F key=export
 
 # Ensure auditd Collects Information on the Use of Privileged Commands
+-a always,exit -F path=/usr/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged
+-a always,exit -F path=/usr/libexec/pt_chown -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged
 {% for command in audit_privileged_commands.stdout_lines %}
 -a always,exit -F path={{ command }} -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged
 {% endfor %}
