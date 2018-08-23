@@ -76,22 +76,23 @@
 
 - import_role:
     name: spacewalk-client
-  when: spacewalk_server
+  when: spacewalk_server is defined
   tags:
-    - spacewalk
+    - rhn
+    - yum
 
 - import_role:
     name: ovirt-virtual-machine
     tasks_from: guestagent.yml
   when: ansible_system_vendor == 'oVirt'
   tags:
-    - ovirt
+    - ovirtvm
 
 - import_role:
     name: freeipa-client
-  when: ipaserver_master
+  when: ipaserver_master is defined
   tags:
-    - freeipa-client
+    - ipaclient
 
 - import_role:
     name: firewalld
@@ -102,11 +103,12 @@
     name: icinga-agent
     tasks_from: nrpe.yml
   tags:
-    - monitoring
+    - icinga
+    - nrpe
 
 - import_role:
     name: certmonger
-  when: ipaserver_master
+  when: ipaserver_master is defined
   tags:
     - certmonger
 
@@ -124,18 +126,20 @@
     name: postfix
   tags:
     - mail
+    - postfix
 
 - import_role:
     name: ossec-agent
   when: ossec_host_group not in group_names and ossec_managed_server
   tags:
-    - ossec
+    - ossecagent
 
 - import_role:
     name: chrony
   when: "'ipaservers' not in group_names"
   tags:
     - ntp
+    - chrony
 
 # FreeIPA doesnt yet support chrony on server
 - import_role:
@@ -195,24 +199,70 @@
   import_tasks: lvm.yml
   tags:
     - lvm
-    - storage
+    - disk
 
 - name: Setup Filesystems
   import_tasks: fs.yml
   tags:
     - fs
-    - storage
+    - disk
 
 - name: Configure filesystem mounts
   import_tasks: mount.yml
   tags:
     - mount
-    - storage
+    - disk
+
+- import_role:
+    name: rsyslog
+  when: rsyslog_server is defined
+  tags:
+    - rsyslog
+
+- import_role:
+    name: filebeat
+  when: rsyslog_server is defined
+  tags:
+    - filebeat
 
 - name: Install useful packages
   yum:
     name: '{{ item }}'
     state: installed
   with_items:
+    - bash-completion
+    - zsh
     - vim-enhanced
+  tags:
+    - install
+
+- name: perms on grub.conf
+  file:
+    name: /boot/grub2/grub.cfg
+    mode: 0600
+  tags:
+    - config
+    - security
+
+- name: blacklist modules
+  lineinfile:
+    create: yes
+    dest: "/etc/modprobe.d/{{item}}.conf"
+    regexp: "{{item}}"
+    line: "install {{item}} /bin/true"
+  with_items:
+    - dccp
+    - sctp
+  tags:
+    - config
+    - security
+
+- name: Apply audit rules
+  copy:
+    src: audit.rules
+    dest: /etc/audit/audit.rules
+  tags:
+    - config
+    - audit
+    - security
 
