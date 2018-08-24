@@ -320,6 +320,10 @@ DATAONLY =  p+n+u+g+s+acl+selinux+xattrs+sha512
 #
 /bin    NORMAL
 /sbin   NORMAL
+{% if aide_exclude_paths != [] %}
 
-# Ignore swift data disks
-!/srv/node/
+# Ignore custom paths
+{% for path in aide_exclude_paths %}
+!{{ path }}
+{% endfor %}
+{% endif %}

@@ -49,3 +49,5 @@ install_veeam_agent: False
 sysctl_ip_forwarding: 0
 
 audit_privileged_commands: []
+
+aide_exclude_paths: []
