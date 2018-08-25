@@ -214,6 +214,7 @@
 
 - import_role:
     name: lvm
+  when: volume_groups != []
   tags:
     - lvm
     - disk
