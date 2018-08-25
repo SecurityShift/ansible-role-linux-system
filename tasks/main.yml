@@ -43,7 +43,7 @@
   tags:
     - rootuser
 
-- name: Create admin and sshusers group
+- name: Create admin groups
   group:
     name: '{{ item.name }}'
     system: true
