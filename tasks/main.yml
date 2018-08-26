@@ -88,6 +88,11 @@
     - yum
 
 - import_role:
+    name: selinux
+  tags:
+    - selinux
+
+- import_role:
     name: ovirt-virtual-machine
     tasks_from: guestagent.yml
   when: ansible_system_vendor == 'oVirt'
@@ -122,11 +127,6 @@
    name: ssh
   tags:
     - ssh
-
-- import_role:
-    name: selinux
-  tags:
-    - selinux
 
 - import_role:
     name: postfix
