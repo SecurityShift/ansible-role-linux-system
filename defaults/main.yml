@@ -51,3 +51,7 @@ sysctl_ip_forwarding: 0
 audit_privileged_commands: []
 
 aide_exclude_paths: []
+
+anacron_random_delay: 45
+anacron_hours_range: 3-22
+

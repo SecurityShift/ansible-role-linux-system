@@ -154,6 +154,18 @@
   tags:
     - ntp
 
+- name: Configure anacron
+  template:
+    src: anacrontab.j2
+    dest: /etc/anacrontab
+    owner: root
+    group: root
+    mode: 0600
+  tags:
+    - config
+    - anacron
+    - cron
+
 - import_role:
     name: logrotate
   tags:
