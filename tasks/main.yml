@@ -1,6 +1,11 @@
 ---
 # tasks file for linux-system
 
+- name: "Create custom fact directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    state: "directory"
+
 - name: Set hostname
   hostname:
     name: '{{ inventory_hostname }}'
@@ -350,11 +355,11 @@
     - config
     - security
 
-- name: Disable service kdump
+- name: Setup kdump service state
   service:
     name: kdump
-    enabled: no
-    state: stopped
+    enabled: "{{ 'no' if not kdump_service | default(False) else 'yes' }}"
+    state: "{{ 'stopped' if not kdump_service | default(False) else 'started' }}"
   tags:
     - config
     - security
@@ -620,4 +625,14 @@
     - pam
     - security
 
-
+- name: Add letsencrypt intermediate certs
+  copy:
+    src: '{{ item }}'
+    dest: '/etc/pki/ca-trust/source/anchors/{{ item }}'
+  with_items:
+    - letsencryptauthorityx3.pem
+    - lets-encrypt-x3-cross-signed.pem
+  notify: update ca certs
+  tags:
+    - letsencrypt
+    - ssl

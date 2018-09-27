@@ -21,3 +21,6 @@
 
 - name: make new aide database
   command: /bin/mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+
+- name: update ca certs
+  command: update-ca-trust
