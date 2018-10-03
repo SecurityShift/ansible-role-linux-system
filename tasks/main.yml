@@ -516,6 +516,7 @@
 - name: update aide database
   command: /usr/sbin/aide --update
   when: update_aide is defined and update_aide
+  notify: make new aide database
 
 - name: Prevent Log In to Accounts With Empty Password
   replace:
