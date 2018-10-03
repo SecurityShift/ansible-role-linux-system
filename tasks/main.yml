@@ -513,6 +513,10 @@
     - aide
     - security
 
+- name: update aide database
+  command: /usr/sbin/aide --update
+  when: update_aide is defined and update_aide
+
 - name: Prevent Log In to Accounts With Empty Password
   replace:
     dest: '/etc/pam.d/{{ item }}-auth'
