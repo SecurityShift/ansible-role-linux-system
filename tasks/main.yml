@@ -264,6 +264,7 @@
     - zsh
     - vim-enhanced
     - screen
+    - sysstat
     - '{{ required_packages }}'
   tags:
     - install
@@ -517,6 +518,9 @@
   command: /usr/sbin/aide --update
   when: update_aide is defined and update_aide
   notify: make new aide database
+  tags:
+    - aide
+    - security
 
 - name: Prevent Log In to Accounts With Empty Password
   replace:
