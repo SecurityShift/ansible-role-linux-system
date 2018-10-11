@@ -15,12 +15,5 @@
 - name: update grub config
   command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
 
-- name: init aide
-  command: /usr/sbin/aide --init
-  notify: make new aide database
-
-- name: make new aide database
-  command: /bin/mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-
 - name: update ca certs
   command: update-ca-trust
