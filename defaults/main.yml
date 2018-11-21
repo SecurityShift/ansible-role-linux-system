@@ -55,3 +55,8 @@ aide_exclude_paths: []
 anacron_random_delay: 45
 anacron_hours_range: 3-22
 
+useful_packages:
+  - bash-completion
+  - zsh
+  - vim-enhanced
+  - screen

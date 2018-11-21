@@ -16,3 +16,40 @@ galaxy_info:
     - redhat
 dependencies:
   - role: common
+  - role: spacewalk-client
+    when: spacewalk_server is defined
+  - role: selinux
+  - role: aide
+    tags:
+      - aide
+    #  - role: ovirt-virtual-machine
+    #tasks_from: guestagent.yml
+    #when: ansible_system_vendor == 'oVirt'
+  - role: freeipa-client
+    when: ipaserver_master is defined
+  - role: certmonger
+    when: ipaserver_master is defined
+  - role: firewalld
+  - role: nrpe
+  - role: ssh
+  - role: postfix
+  - role: ossec-agent
+    when: ossec_host_group not in group_names and ossec_managed_server
+  - role: chrony
+    when: "'ipaservers' not in group_names"
+# FreeIPA doesnt yet support chrony on server
+  - role: ntp
+    when: "'ipaservers' in group_names"
+  - role: logrotate
+  - role: dell-system-updates
+    when: ansible_system_vendor == "Dell Inc."
+  - role: lvm
+    when: logical_volumes != []
+  - role: rsyslog
+    when: rsyslog_server is defined
+  - role: filebeat
+    tags:
+      - filebeat
+    when: rsyslog_server is defined
+  - role: veeam-agent
+    when: install_veeam_agent

@@ -1,0 +1,357 @@
+---
+# tasks file for linux-system hardening
+
+- name: perms on grub.conf
+  file:
+    name: /boot/grub2/grub.cfg
+    mode: 0600
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: blacklist modules
+  lineinfile:
+    create: yes
+    dest: "/etc/modprobe.d/{{item}}.conf"
+    regexp: "{{item}}"
+    line: "install {{item}} /bin/true"
+  with_items:
+    - dccp
+    - sctp
+    - usb-storage
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Add auditd configuration
+  template:
+    src: auditd.conf.j2
+    dest: /etc/audit/auditd.conf
+    owner: root
+    group: root
+    mode: 0640
+  notify:
+    - restart auditd
+    - update aide
+  tags:
+    - config
+    - audit
+    - security
+
+- name: Search for privileged commands
+  shell: "find / -xdev -type f -perm -4000 -o -type f -perm -2000 2>/dev/null | cat"
+  check_mode: no
+  register: audit_privileged_commands
+  changed_when: False
+  tags:
+    - config
+    - audit
+    - security
+
+- name: Apply CIS & STIG audit rules
+  template:
+    src: security.rules.j2
+    dest: /etc/audit/rules.d/security.rules
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - restart auditd
+    - update aide
+  tags:
+    - config
+    - audit
+    - security
+
+- name: Apply CIS login restrictions
+  template:
+    src: login.defs.j2
+    dest: /etc/login.defs
+    owner: root
+    group: root
+    mode: 0644
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl kernel.randomize_va_space is set to 2
+  sysctl:
+    name: kernel.randomize_va_space
+    value: 2
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Disable ctl+alt+delete rebooting the system from cli
+  systemd:
+    name: ctrl-alt-del.target
+    masked: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Setup kdump service state
+  service:
+    name: kdump
+    enabled: "{{ 'no' if not kdump_service | default(False) else 'yes' }}"
+    state: "{{ 'stopped' if not kdump_service | default(False) else 'started' }}"
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.conf.default.send_redirects is set to 0
+  sysctl:
+    name: net.ipv4.conf.default.send_redirects
+    value: 0
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.conf.all.send_redirects is set to 0
+  sysctl:
+    name: net.ipv4.conf.all.send_redirects
+    value: 0
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.ip_forward is set correctly
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '{{ sysctl_ip_forwarding }}'
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.conf.all.accept_redirects is set
+  sysctl:
+    name: net.ipv4.conf.all.accept_redirects
+    value: 0
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.conf.default.accept_redirects is set
+  sysctl:
+    name: net.ipv4.conf.default.accept_redirects
+    value: 0
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv4.icmp_echo_ignore_broadcasts is set
+  sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: 1
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Ensure sysctl net.ipv6.conf.all.accept_source_route is set
+  sysctl:
+    name: net.ipv6.conf.all.accept_source_route
+    value: 0
+    state: present
+    reload: yes
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Limit the Number of Concurrent Login Sessions Allowed Per User
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: maxlogins
+    value: 10
+  notify: update aide
+  tags:
+    - config
+    - security
+
+- name: Add /etc/default/useradd
+  template:
+    src: useradd.j2
+    dest: /etc/default/useradd
+    owner: root
+    group: root
+    mode: 0644
+  notify: update aide
+  tags:
+    - security
+    - useradd
+
+- name: Install dracut-fips for fips enabled kernel
+  yum:
+    name: '{{ item }}'
+    state: installed
+  with_items:
+    - dracut-fips
+    - prelink
+  notify: update aide
+  tags:
+    - install
+    - security
+
+- name: Add grub password
+  template:
+    src: 01_users.j2
+    dest: /etc/grub.d/01_users
+    owner: root
+    group: root
+    mode: 0750
+  notify:
+    - update grub config
+    - update aide
+  tags:
+    - grub
+    - security
+
+- name: Prevent Log In to Accounts With Empty Password
+  replace:
+    dest: '/etc/pam.d/{{ item }}-auth'
+    follow: yes
+    regexp: 'nullok'
+  with_items:
+    - system
+    - password
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable maxrepeat is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^maxrepeat"
+    line: "maxrepeat = 2"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable maxclassrepeat is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^maxclassrepeat"
+    line: "maxclassrepeat = 4"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable dcredit is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^dcredit"
+    line: "dcredit = -1"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable minlen is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^minlen"
+    line: "minlen = 15"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable ucredit is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^ucredit"
+    line: "ucredit = -2"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable ocredit is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^ocredit"
+    line: "ocredit = -2"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable lcredit is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^lcredit"
+    line: "lcredit = -2"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable difok is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^difok"
+    line: "difok = 8"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
+- name: Ensure PAM variable minclass is set accordingly
+  lineinfile:
+    create: yes
+    dest: "/etc/security/pwquality.conf"
+    regexp: "^minclass"
+    line: "minclass = 4"
+  notify: update aide
+  tags:
+    - auth
+    - pam
+    - security
+
