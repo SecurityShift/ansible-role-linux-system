@@ -6,6 +6,8 @@
     path: "/etc/ansible/facts.d"
     state: "directory"
   notify: update aide
+  tags:
+    - ansible
 
 - name: Set hostname
   hostname:
@@ -160,11 +162,8 @@
 
 - name: Install useful packages
   yum:
-    name: '{{ item }}'
+    name: '{{ useful_packages }} + {{ required_packages }}'
     state: installed
-  with_items:
-    - '{{ useful_packages }}'
-    - '{{ required_packages }}'
   notify: update aide
   tags:
     - install
@@ -182,6 +181,13 @@
   tags:
     - letsencrypt
     - ssl
+
+- import_role:
+    name: ovirt-virtual-machine
+    tasks_from: guestagent.yml
+  when: ansible_system_vendor == 'oVirt'
+  tags:
+    - ovirtvm
 
 - import_tasks: hardening.yml
 

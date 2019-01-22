@@ -209,11 +209,8 @@
 
 - name: Install dracut-fips for fips enabled kernel
   yum:
-    name: '{{ item }}'
+    name: '{{ fips_packages }}'
     state: installed
-  with_items:
-    - dracut-fips
-    - prelink
   notify: update aide
   tags:
     - install

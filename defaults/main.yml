@@ -60,3 +60,7 @@ useful_packages:
   - zsh
   - vim-enhanced
   - screen
+
+fips_packages:
+  - dracut-fips
+  - prelink

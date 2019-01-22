@@ -19,18 +19,20 @@ dependencies:
   - role: spacewalk-client
     when: spacewalk_server is defined
   - role: selinux
-  - role: aide
-    tags:
-      - aide
     #  - role: ovirt-virtual-machine
     #tasks_from: guestagent.yml
     #when: ansible_system_vendor == 'oVirt'
   - role: freeipa-client
     when: ipaserver_master is defined
+
+  - role: nrpe
   - role: certmonger
     when: ipaserver_master is defined
+  - role: aide
+    tags:
+      - aide
+
   - role: firewalld
-  - role: nrpe
   - role: ssh
   - role: postfix
   - role: ossec-agent
@@ -41,6 +43,8 @@ dependencies:
   - role: ntp
     when: "'ipaservers' in group_names"
   - role: logrotate
+    tags:
+      - logrotate
   - role: dell-system-updates
     when: ansible_system_vendor == "Dell Inc."
   - role: lvm
@@ -53,3 +57,5 @@ dependencies:
     when: rsyslog_server is defined
   - role: veeam-agent
     when: install_veeam_agent
+    tags:
+      - veeamagent
