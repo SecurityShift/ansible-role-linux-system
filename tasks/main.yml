@@ -88,3 +88,10 @@
   tags:
     - install
 
+- name: Install AWSCLI tools
+  yum:
+    name: awscli
+    state: installed
+  when: ansible_bios_version is match(".*amazon")
+  tags:
+    - install
