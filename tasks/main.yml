@@ -5,14 +5,14 @@
   file:
     path: "/etc/ansible/facts.d"
     state: "directory"
-  notify: update aide
+    #notify: update aide
   tags:
     - ansible
 
 - name: Set hostname
   hostname:
     name: '{{ inventory_hostname }}'
-  notify: update aide
+    #notify: update aide
   tags:
     - config
     - hostname
@@ -22,7 +22,7 @@
     dest: /etc/hosts
     line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }}"
     state: present
-  notify: update aide
+    #notify: update aide
   tags:
     - config
     - hostname
@@ -30,7 +30,7 @@
 - name: Set timezone to UTC
   timezone:
     name: Etc/UTC
-  notify: update aide
+    #notify: update aide
   tags:
     - timezone
 
@@ -40,7 +40,7 @@
     state: absent
     remove: true
   when: create_admin_users
-  notify: update aide
+  #notify: update aide
   tags:
     - adminuser
 
@@ -52,7 +52,7 @@
     uid: 0
     group: root
     password: '{{ root_password_hash }}'
-  notify: update aide
+    #notify: update aide
   tags:
     - rootuser
 
@@ -65,7 +65,7 @@
   with_items:
     - { name: admin, gid: '{{ admin_group_id }}' }
   when: create_admin_users
-  notify: update aide
+  #notify: update aide
   tags:
     - adminuser
 
@@ -80,7 +80,7 @@
     password: '{{ admin_password_hash }}'
     expires: -1
   when: create_admin_users
-  notify: update aide
+  #notify: update aide
   tags:
     - adminuser
 
@@ -91,7 +91,7 @@
     key: '{{ admin_ssh_keys | join("\n") }}'
     exclusive: true
   when: create_admin_users
-  notify: update aide
+  #notify: update aide
   tags:
     - adminuser
     - ssh
@@ -103,7 +103,7 @@
     owner: root
     group: root
     mode: 0600
-  notify: update aide
+    #notify: update aide
   tags:
     - config
     - anacron
@@ -116,7 +116,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: update aide
+    #notify: update aide
   tags:
     - shell
     - profile
@@ -128,7 +128,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: update aide
+    #notify: update aide
   tags:
     - shell
     - prompt
@@ -140,7 +140,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: update aide
+    #notify: update aide
   tags:
     - shell
     - motd
@@ -152,7 +152,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: update aide
+    #notify: update aide
   with_items:
     - issue
     - issue.net
@@ -164,35 +164,7 @@
   yum:
     name: '{{ useful_packages }} + {{ required_packages }}'
     state: installed
-  notify: update aide
+    #notify: update aide
   tags:
     - install
-
-- name: Add letsencrypt intermediate certs
-  copy:
-    src: '{{ item }}'
-    dest: '/etc/pki/ca-trust/source/anchors/{{ item }}'
-  with_items:
-    - letsencryptauthorityx3.pem
-    - lets-encrypt-x3-cross-signed.pem
-  notify:
-    - update ca certs
-    - update aide
-  tags:
-    - letsencrypt
-    - ssl
-
-- import_role:
-    name: ovirt-virtual-machine
-    tasks_from: guestagent.yml
-  when: ansible_system_vendor == 'oVirt'
-  tags:
-    - ovirtvm
-
-- import_tasks: hardening.yml
-
-- name: "Define role executed var {{ role_name }}_was_executed"
-  set_fact:
-    linux_system_was_executed: true
-    cacheable: true
 

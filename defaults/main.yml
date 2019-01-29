@@ -5,25 +5,6 @@ linux_system_role_git_repo: https://github.com/SecurityShift/ansible-role-linux-
 
 prompt_colour: red
 
-nmcli_bond: []
-nmcli_bond_slave: []
-nmcli_ethernet: []
-nmcli_vlan: []
-
-aliases: []
-
-admin_interface:
-  - name: bond0
-    vlanid: 20
-    vlandev: bond0
-    slaves:
-      - ens2f0
-      - ens2f1
-
-mailaliases:
-  - name: root
-    alias: '{{ admin_email }}'
-
 admin_user_id: 1000
 admin_group_id: 1000
 
@@ -40,26 +21,20 @@ ossec_host_group: ossec
 
 shell_timeout: 600
 
-required_packages: []
-
-create_admin_users: True
-
-install_veeam_agent: False
-
-sysctl_ip_forwarding: 0
-
-audit_privileged_commands: []
-
-aide_exclude_paths: []
+create_admin_users: False
 
 anacron_random_delay: 45
 anacron_hours_range: 3-22
 
+required_packages: []
 useful_packages:
   - bash-completion
   - zsh
   - vim-enhanced
   - screen
+  - yum-utils
+  - device-mapper-persistent-data
+  - lvm2
 
 fips_packages:
   - dracut-fips

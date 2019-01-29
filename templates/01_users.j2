@@ -1,9 +1,0 @@
-#!/bin/sh -e
-# {{ ansible_managed }}
-# See {{ linux_system_role_git_repo }}/blob/master/templates/01_users.j2
-
-cat << EOF
-set superusers="grubuser"
-export superusers
-password_pbkdf2 grubuser {{ grub_password_hash }}
-EOF

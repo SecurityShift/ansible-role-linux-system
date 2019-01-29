@@ -1,19 +1,2 @@
 ---
 # handlers file for SecurityShift.linux-system
-
-- name: update aliases database
-  command: newaliases
-
-# Auditd cant restart with systemctl
-- name: restart auditd
-  service:
-    name: auditd
-    state: restarted
-    use: service
-  when: no_restart is not defined and not no_restart
-
-- name: update grub config
-  command: /sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
-
-- name: update ca certs
-  command: update-ca-trust
