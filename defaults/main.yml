@@ -11,7 +11,6 @@ admin_group_id: 1000
 motd_info:
   - " FQDN    : {{ ansible_fqdn }}"
   - " Distro  : {{ ansible_distribution }} {{ ansible_distribution_major_version }} {{ ansible_distribution_release }}"
-  - " Virtual : {{ 'YES' if ansible_virtualization_role is defined and ansible_virtualization_role == 'guest' else 'NO' }}\n"
   - " CPUs    : {{ ansible_processor_vcpus }}"
   - " RAM     : {{ (ansible_memtotal_mb / 1000) | round(1) }}GB\n"
   - " Ansible Managed - DO NOT EDIT!"
@@ -35,7 +34,5 @@ useful_packages:
   - yum-utils
   - device-mapper-persistent-data
   - lvm2
+  - wget
 
-fips_packages:
-  - dracut-fips
-  - prelink
