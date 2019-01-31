@@ -5,14 +5,14 @@
   file:
     path: "/etc/ansible/facts.d"
     state: "directory"
-    #notify: update aide
+  notify: update aide
   tags:
     - ansible
 
 - name: Set timezone to UTC
   timezone:
     name: Etc/UTC
-    #notify: update aide
+  notify: update aide
   tags:
     - timezone
 
@@ -23,7 +23,7 @@
     owner: root
     group: root
     mode: 0600
-    #notify: update aide
+  notify: update aide
   tags:
     - config
     - anacron
@@ -36,7 +36,7 @@
     owner: root
     group: root
     mode: 0644
-    #notify: update aide
+  notify: update aide
   tags:
     - shell
     - profile
@@ -48,7 +48,7 @@
     owner: root
     group: root
     mode: 0644
-    #notify: update aide
+  notify: update aide
   tags:
     - shell
     - prompt
@@ -60,7 +60,7 @@
     owner: root
     group: root
     mode: 0644
-    #notify: update aide
+  notify: update aide
   tags:
     - shell
     - motd
@@ -72,7 +72,7 @@
     owner: root
     group: root
     mode: 0644
-    #notify: update aide
+  notify: update aide
   with_items:
     - issue
     - issue.net
@@ -84,6 +84,6 @@
   yum:
     name: '{{ useful_packages }} + {{ required_packages }}'
     state: installed
-    #notify: update aide
+  notify: update aide
   tags:
     - install
