@@ -4,3 +4,4 @@
 - name: update aide
   command: /usr/sbin/run-aide update
   when: install_aide is defined and install_aide
+  run_once: True
