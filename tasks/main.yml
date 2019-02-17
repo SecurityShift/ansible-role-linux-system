@@ -16,6 +16,69 @@
   tags:
     - timezone
 
+- name: Set root password
+  user:
+    name: root
+    system: true
+    comment: "Root User"
+    uid: 0
+    group: root
+    password: '{{ root_password_hash }}'
+  when: root_password_hash is defined
+  notify: update aide
+  tags:
+    - rootuser
+
+- name: Create admin groups
+  group:
+    name: '{{ item.name }}'
+    system: true
+    gid: '{{ item.gid }}'
+    state: present
+  with_items: '{{ admin_users }}'
+  when: admin_users is defined
+  notify: update aide
+  tags:
+    - adminuser
+
+- name: Create admin users
+  user:
+    name: '{{ item.name }}'
+    system: true
+    comment: "Admin User"
+    uid: '{{ item.uuid }}'
+    group: '{{ item.name }}'
+    groups: [ wheel ]
+    password: '{{ item.password_hash }}'
+    #password_lock: no
+  with_items: '{{ admin_users }}'
+  notify: update aide
+  tags:
+    - adminuser
+
+- name: Set admin users authorized key
+  authorized_key:
+    user: '{{ item.name }}'
+    state: present
+    key: '{{ item.ssh_public_keys | join("\n") }}'
+    exclusive: true
+  with_items: '{{ admin_users }}'
+  notify: update aide
+  tags:
+    - adminuser
+    - ssh
+
+- name: Remove passwordless sudo from centos user
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - /etc/sudoers.d/centos
+    - /etc/sudoers.d/90-cloud-init-users
+  tags:
+    - adminuser
+    - sudo
+
 - name: Configure anacron
   template:
     src: anacrontab.j2
